@@ -56,7 +56,7 @@ extern "C" {
 #include <math.h>
 #include <stdio.h>
 #include <opencv2/opencv.hpp>
-#include <geometry_msgs/Twist.h>
+#include <geometry_msgs/msg/twist.h>
 #include <string>
 #include <cstdlib>
 #include <typeinfo>
@@ -64,10 +64,10 @@ extern "C" {
 #include <boost/thread.hpp>
 
 // pcam使用時
-#include "std_msgs/MultiArrayLayout.h"
-#include "std_msgs/MultiArrayDimension.h"
-#include "std_msgs/UInt8MultiArray.h"
-#include "std_msgs/String.h"
+#include "std_msgs/msg/multi_array_layout.h"
+#include "std_msgs/msg/multi_array_dimension.h"
+#include "std_msgs/msg/u_int8_multi_array.h"
+#include "std_msgs/msg/string.h"
 
 // devmem
 #include <stdlib.h>
