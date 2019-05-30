@@ -48,7 +48,7 @@ namespace autonomous
 
         twist_pub = create_publisher<geometry_msgs::Twist>("/cmd_vel", 1);
         signal_search_ = create_publisher<std_msgs::String>(("/signal_search_type", 1);
-
+/*
 
 #if DEBUG
 
@@ -62,7 +62,7 @@ namespace autonomous
 #endif
         red_pub_ = this->create_subscription<std_msgs::msg::String>(
                 "/red_flag", std::bind(&Autonomous::redFlagUpdate, this, _1));
-
+*/
     }
 
 } // namespace autorace
