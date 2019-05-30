@@ -16,6 +16,7 @@ endif()
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 
+find_package(ament_cmake REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(cv_bridge REQUIRED)
 find_package(rclcpp REQUIRED)
@@ -25,6 +26,7 @@ find_package(geometry_msgs REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(class_loader REQUIRED)
 
+include_directories(include)
 add_library(autonomous_component SHARED src/autonomous_component.cpp include/json_lib/json11.cpp)
 target_compile_definitions(autonomous_component PRIVATE "AUTONOMOUS_BUILDING_DLL")
 ament_target_dependencies(autonomous_component
@@ -37,7 +39,7 @@ ament_target_dependencies(autonomous_component
         geometry_msgs
         )
 
-rclcpp_register_node_plugins(autonomous_component "autonomous::Autonomous")
+rclcpp_register_node_plugins(autonomous_component "autonomous::autonomous")
 
 include_directories(
         ${sensor_msgs_INCLUDE_DIRS}
@@ -68,6 +70,9 @@ ament_target_dependencies(autonomous
         image_transport
         geometry_msgs
         )
+ament_export_include_directories(include)
+
+ament_export_libraries(autonomous_component)
 
 install(DIRECTORY
         include/autonomous
