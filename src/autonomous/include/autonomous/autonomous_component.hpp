@@ -43,6 +43,51 @@ extern "C" {
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/string.hpp>
 
+#include <fstream>
+#include <iostream>
+#include <image_transport/image_transport.h>
+#include <cv_bridge/cv_bridge.h>
+#include <sensor_msgs/msg/image_encodings.h>
+#include <opencv2/videoio/videoio.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/video/background_segm.hpp>
+#include "unistd.h"
+#include <math.h>
+#include <stdio.h>
+#include <opencv2/opencv.hpp>
+#include <geometry_msgs/msg/Twist.h>
+#include <string>
+#include <cstdlib>
+#include <typeinfo>
+
+#include <boost/thread.hpp>
+
+// pcam使用時
+#include "std_msgs/msg/MultiArrayLayout.h"
+#include "std_msgs/msg/MultiArrayDimension.h"
+#include "std_msgs/msg/UInt8MultiArray.h"
+#include "std_msgs/msg/String.h"
+
+// devmem
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <errno.h>
+#include <signal.h>
+#include <fcntl.h>
+#include <ctype.h>
+#include <termios.h>
+#include <sys/types.h>
+#include <sys/mman.h>
+
+// JSON読み込み
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <json_lib/json11.hpp>
+
+
 namespace autonomous
 {
 
