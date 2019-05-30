@@ -97,11 +97,11 @@ namespace autonomous
         AUTONOMOUS_PUBLIC Autonomous();
 
     private:
-        rclcpp::Subscription<std_msgs::msg:::UInt8MultiArrayPtr>::SharedPtr image_sub_ ;
+        rclcpp::Subscription<std_msgs::msg:::UInt8MultiArrayPtr> image_sub_ ;
         rclcpp::Subscription<std_msgs::msg::String>::SharedPtr red_pub_;
 
-        rclcpp::Publisher<geometry_msgs::Twist>::SharedPtr twist_pub;
-        rclcpp::Publisher<std_msgs::String>::SharedPtr signal_search_;
+        rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr twist_pub;
+        rclcpp::Publisher<std_msgs::msg::String>::SharedPtr signal_search_;
         // void autonomous();
     };
 
