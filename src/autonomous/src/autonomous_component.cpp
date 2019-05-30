@@ -32,7 +32,7 @@ public:
     int beforeX;
     int beforeY;
     int findCnt;
-    ros::Time timeStamp;
+    //TODO ros::Time timeStamp;
 } OBJECT;
 
 

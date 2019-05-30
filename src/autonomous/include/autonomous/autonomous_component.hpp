@@ -1,5 +1,5 @@
-#if !defined AUTONOMOUS__AUTONOMOUS_NODE_HPP_
-#define AUTONOMOUS__AUTONOMOUS_NODE_HPP_
+#if !defined AUTONOMOUS__AUTONOMOUS_COMPONENT_HPP_
+#define AUTONOMOUS__AUTONOMOUS_COMPONENT_HPP_
 
 
 #if __cplusplus
@@ -105,6 +105,6 @@ namespace autonomous
         // void autonomous();
     };
 
-} // namespace autonomous_ros2_style
+} // namespace autonomous
 
-#endif // AUTONOMOUS__AUTONOMOUS_NODE_HPP_
+#endif // AUTONOMOUS__AUTONOMOUS__COMPONENT_HPP_
