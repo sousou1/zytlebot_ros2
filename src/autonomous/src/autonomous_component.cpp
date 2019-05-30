@@ -46,8 +46,8 @@ namespace autonomous
     {
         // init end
 
-        twist_pub = create_publisher<geometry_msgs::msg::Twist>("/cmd_vel", 1);
-        signal_search_ = create_publisher<std_msgs::msg::String>(("/signal_search_type", 1);
+        twist_pub = create_publisher<geometry_msgs::msg::Twist>("/cmd_vel");
+        signal_search_ = create_publisher<std_msgs::msg::String>(("/signal_search_type");
 /*
 
 #if DEBUG
