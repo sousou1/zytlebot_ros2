@@ -56,7 +56,7 @@ extern "C" {
 #include <math.h>
 #include <stdio.h>
 #include <opencv2/opencv.hpp>
-#include <geometry_msgs/msg/twist.h>
+#include <geometry_msgs/msg/twist.hpp>
 #include <string>
 #include <cstdlib>
 #include <typeinfo>
@@ -64,10 +64,10 @@ extern "C" {
 #include <boost/thread.hpp>
 
 // pcam使用時
-#include "std_msgs/msg/multi_array_layout.h"
-#include "std_msgs/msg/multi_array_dimension.h"
-#include "std_msgs/msg/u_int8_multi_array.h"
-#include "std_msgs/msg/string.h"
+#include "std_msgs/msg/multi_array_layout.hpp"
+#include "std_msgs/msg/multi_array_dimension.hpp"
+#include "std_msgs/msg/u_int8_multi_array.hpp"
+#include "std_msgs/msg/string.hpp"
 
 // devmem
 #include <stdlib.h>
@@ -97,7 +97,7 @@ namespace autonomous
         AUTONOMOUS_PUBLIC Autonomous();
 
     private:
-        rclcpp::Subscription<std_msgs::msg:::UInt8MultiArrayPtr> image_sub_ ;
+        rclcpp::Subscription<std_msgs::msg:::UInt8MultiArrayPtr>::SharedPtr image_sub_ ;
         rclcpp::Subscription<std_msgs::msg::String>::SharedPtr red_pub_;
 
         rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr twist_pub;
