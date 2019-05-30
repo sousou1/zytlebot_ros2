@@ -61,7 +61,7 @@ extern "C" {
 #include <cstdlib>
 #include <typeinfo>
 
-#include <boost/thread.hpp>
+// #include <boost/thread.hpp>
 
 // pcam使用時
 #include "std_msgs/msg/multi_array_layout.hpp"
