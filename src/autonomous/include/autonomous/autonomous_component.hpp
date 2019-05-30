@@ -94,12 +94,15 @@ namespace autonomous
     class AUTONOMOUS : public rclcpp::Node
     {
     public:
-        AUTONOMOUS_PUBLIC AUTONOMOUS();
+        AUTONOMOUS_PUBLIC Autonomous();
 
     private:
-        rclcpp::Publisher<std_msgs::msg::String>::SharedPtr pub_;
-        rclcpp::TimerBase::SharedPtr timer_;
-        void autonomous();
+        rclcpp::Subscription<std_msgs::msg:::UInt8MultiArrayPtr>::SharedPtr image_sub_ ;
+        rclcpp::Subscription<std_msgs::msg::String>::SharedPtr red_pub_;
+
+        rclcpp::Publisher<geometry_msgs::Twist>::SharedPtr twist_pub;
+        rclcpp::Publisher<std_msgs::String>::SharedPtr signal_search_;
+        // void autonomous();
     };
 
 } // namespace autonomous_ros2_style
