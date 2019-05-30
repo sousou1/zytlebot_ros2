@@ -91,7 +91,7 @@ extern "C" {
 namespace autonomous
 {
 
-    class AUTONOMOUS : public rclcpp::Node
+    class Autonomous : public rclcpp::Node
     {
     public:
         AUTONOMOUS_PUBLIC Autonomous();
@@ -108,4 +108,4 @@ namespace autonomous
 
 } // namespace autonomous
 
-#endif // AUTONOMOUS__AUTONOMOUS__COMPONENT_HPP_
+#endif // AUTONOMOUS__AUTONOMOUS_COMPONENT_HPP_
