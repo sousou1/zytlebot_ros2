@@ -21,6 +21,40 @@ using namespace cv;
 using std::placeholders::_1;
 
 using namespace std::chrono;
+inline double get_time_sec(void){
+    return static_cast<double>(duration_cast<nanoseconds>(steady_clock::now().time_since_epoch()).count())/1000000000;
+}
+typedef struct object {
+public:
+    // オブジェクトの種類
+    // obstacle, intersection, people
+    std::string objType;
+    int beforeX;
+    int beforeY;
+    int findCnt;
+    //TODO ros::Time timeStamp;
+} OBJECT;
+
+
+// 直線を中点、傾き、長さで表す
+typedef struct straight {
+    cv::Point2f middle;
+    double degree;
+    double length;
+} STRAIGHT;
+
+// map_data[y][x][0]がタイルの種類
+// map_data[y][x][1]が向きを表している
+// 向きは1がデータ画像のとおりで、0~3で右回りに表現されている
+int map_data[7][5][2] = {{{3, 0}, {4, 0}, {7, 2}, {4, 0}, {3, 1}},
+                         {{6, 1}, {0, 0}, {1, 1}, {0, 0}, {6, 1}},
+                         {{4, 1}, {0, 0}, {5, 1}, {0, 0}, {4, 1}},
+                         {{7, 1}, {2, 0}, {8, 0}, {2, 2}, {7, 3}},
+                         {{4, 1}, {0, 0}, {5, 3}, {0, 0}, {4, 1}},
+                         {{6, 1}, {0, 0}, {1, 3}, {0, 0}, {6, 1}},
+                         {{3, 3}, {4, 0}, {7, 0}, {4, 0}, {3, 2}}};
+
+int intersectionDir[100] = {0};
 
 
 /*
