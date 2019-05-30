@@ -47,7 +47,7 @@ extern "C" {
 #include <iostream>
 #include <image_transport/image_transport.h>
 #include <cv_bridge/cv_bridge.h>
-#include <sensor_msgs/msg/image_encodings.h>
+#include <sensor_msgs/image_encodings.hpp>
 #include <opencv2/videoio/videoio.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -56,7 +56,7 @@ extern "C" {
 #include <math.h>
 #include <stdio.h>
 #include <opencv2/opencv.hpp>
-#include <geometry_msgs/msg/Twist.h>
+#include <geometry_msgs/Twist.h>
 #include <string>
 #include <cstdlib>
 #include <typeinfo>
@@ -64,10 +64,10 @@ extern "C" {
 #include <boost/thread.hpp>
 
 // pcam使用時
-#include "std_msgs/msg/MultiArrayLayout.h"
-#include "std_msgs/msg/MultiArrayDimension.h"
-#include "std_msgs/msg/UInt8MultiArray.h"
-#include "std_msgs/msg/String.h"
+#include "std_msgs/MultiArrayLayout.h"
+#include "std_msgs/MultiArrayDimension.h"
+#include "std_msgs/UInt8MultiArray.h"
+#include "std_msgs/String.h"
 
 // devmem
 #include <stdlib.h>
