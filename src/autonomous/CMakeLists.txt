@@ -26,7 +26,7 @@ find_package(OpenCV REQUIRED)
 find_package(class_loader REQUIRED)
 
 add_library(autonomous_component SHARED src/autonomous_component.cpp include/json_lib/json11.cpp)
-target_compile_definitions(autonomous_component PRIVATE "DISPLAYER_BUILDING_DLL")
+target_compile_definitions(autonomous_component PRIVATE "AUTONOMOUS_BUILDING_DLL")
 ament_target_dependencies(autonomous_component
         sensor_msgs
         cv_bridge
