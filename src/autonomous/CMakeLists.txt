@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(autorace)
+project(autonomous)
 
 set(CMAKE_CXX_FLAGS "-std=c++11 -lm -g -fsigned-char -fpermissive -Wint-to-pointer-cast -O3")
 
@@ -41,7 +41,8 @@ include_directories(
 )
 
 
-add_library(autorace src/autorace.cpp include/signal_lib/xcalc_hog.c include/signal_lib/xcalc_hog_linux.c  include/signal_lib/xcalc_hog_sinit.c include/signal_lib/linuxmisc.cpp include/signal_lib/linuxmmap.cpp include/json_lib/json11.cpp)
+# add_library(autorace src/autorace.cpp include/signal_lib/xcalc_hog.c include/signal_lib/xcalc_hog_linux.c  include/signal_lib/xcalc_hog_sinit.c include/signal_lib/linuxmisc.cpp include/signal_lib/linuxmmap.cpp include/json_lib/json11.cpp)
+add_library(autonomous src/autonomous.cpp include/json_lib/json11.cpp)
 #add_definitions(-std=c++11)
 
 # Build a standalone version of the node
