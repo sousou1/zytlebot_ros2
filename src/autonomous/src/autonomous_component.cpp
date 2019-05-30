@@ -334,26 +334,25 @@ namespace autonomous
 
         // init end
 
-        twist_pub = nh_.advertise<geometry_msgs::Twist>("/cmd_vel", 1000);
-        signal_search_ = nh_.advertise<std_msgs::String>("/signal_search_type", 1);
+        twist_pub = create_publisher<geometry_msgs::Twist>("/cmd_vel", 1);
+        signal_search_ = create_publisher<std_msgs::String>(("/signal_search_type", 1);
+
 
         // パラメータセット
         setParam();
 
 #if DEBUG
-        image_sub_ = nh_.subscribe("/image_array", 1,
-                                       &NodeletAutorace::imageCb, this);
-#else
-        image_sub_ = nh_.subscribe("/pcam/image_array", 1,
-                                   &NodeletAutorace::imageCb, this);
-#endif
 
-        red_pub_ = nh_.subscribe("/red_flag", 1,
-                                 &NodeletAutorace::redFlagUpdate, this);
-        /*
-        image_sub_ = it_.subscribe("/camera/rgb/image_raw", 1,
-                                   &NodeletAutorace::imageCb, this);
-        */
+        image_sub_ = this->create_subscription<std_msgs::msg::UInt8MultiArray>(
+    "/image_array", std::bind(&Autonomous::image_cb, this, _1));
+
+#else
+        image_sub_ = this->create_subscription<std_msgs::msg:::UInt8MultiArrayPtr>(
+                "/pcam/image_array", std::bind(&Autonomous::image_cb, this, _1));
+
+#endif
+        red_pub_ = this->create_subscription<std_msgs::msg::String>(
+                "/red_flag", std::bind(&Autonomous::redFlagUpdate, this, _1));
 
         //  処理した挙動をパブリッシュ
 
@@ -365,11 +364,22 @@ namespace autonomous
         //
     }
 
-    void Displayer::display_greeting(const std_msgs::msg::String::SharedPtr msg)
-    {
-        RCLCPP_INFO(this->get_logger(), "Received greeting '%s'", msg->data.c_str());
+    void Autonomous::red_flag_update(const std_msgs::String &msg) {
+        if (msg.data == "true") {
+            red_flag = true;
+        } else {
+            red_flag = false;
+        }
+
+        cout << msg.data << endl;
+        cout << red_flag << endl;
     }
 
-} // namespace displayer
+    void Autonomous::image_cb(const std_msgs::msg:::UInt8MultiArrayPtr msg)
+    {
+        cout << "doing" << endl;
+    }
+
+} // namespace autorace
 
 CLASS_LOADER_REGISTER_CLASS(autonomous::Autonomous, rclcpp::Node)
