@@ -1,6 +1,19 @@
+// Copyright 2018 Geoffrey Biggs, AIST
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 #if !defined AUTONOMOUS__AUTONOMOUS_COMPONENT_HPP_
 #define AUTONOMOUS__AUTONOMOUS_COMPONENT_HPP_
-
 
 #if __cplusplus
 extern "C" {
@@ -41,71 +54,21 @@ extern "C" {
 #endif
 
 #include <rclcpp/rclcpp.hpp>
-#include <std_msgs/msg/string.hpp>
-
-#include <fstream>
-#include <iostream>
-#include <image_transport/image_transport.h>
-#include <cv_bridge/cv_bridge.h>
-#include <sensor_msgs/image_encodings.hpp>
-#include <opencv2/videoio/videoio.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/video/background_segm.hpp>
-#include "unistd.h"
-#include <math.h>
-#include <stdio.h>
-#include <opencv2/opencv.hpp>
-#include <geometry_msgs/msg/twist.hpp>
-#include <string>
-#include <cstdlib>
-#include <typeinfo>
-
-#include <boost/thread.hpp>
-
-// pcam使用時
-#include "std_msgs/msg/multi_array_layout.hpp"
-#include "std_msgs/msg/multi_array_dimension.hpp"
-#include "std_msgs/msg/u_int8_multi_array.hpp"
-#include "std_msgs/msg/string.hpp"
-
-// devmem
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <errno.h>
-#include <signal.h>
-#include <fcntl.h>
-#include <ctype.h>
-#include <termios.h>
-#include <sys/types.h>
-#include <sys/mman.h>
-
-// JSON読み込み
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <json_lib/json11.hpp>
-
 
 namespace autonomous
 {
 
-    class AUTONOMOUS : public rclcpp::Node
+    class Autonomous : public rclcpp::Node
     {
     public:
         AUTONOMOUS_PUBLIC Autonomous();
 
     private:
-        rclcpp::Subscription<std_msgs::msg::UInt8MultiArray>::SharedPtr image_sub_ ;
-        rclcpp::Subscription<std_msgs::msg::String>::SharedPtr red_pub_;
-/*
-        rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr twist_pub;
-        rclcpp::Publisher<std_msgs::msg::String>::SharedPtr signal_search_;
-*/
-        // void autonomous();
+        rclcpp::TimerBase::SharedPtr timer_;
+
+        void broadcast_greeting();
     };
 
-} // namespace autonomous
+} // namespace greeting
 
-#endif // AUTONOMOUS__AUTONOMOUS__COMPONENT_HPP_
+#endif // AUTONOMOUS__AUTONOMOUS_COMPONENT_HPP_
