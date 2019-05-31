@@ -88,6 +88,25 @@ extern "C" {
 #include <json_lib/json11.hpp>
 
 
+typedef struct object {
+public:
+    // オブジェクトの種類
+    // obstacle, intersection, people
+    std::string objType;
+    int beforeX;
+    int beforeY;
+    int findCnt;
+    //TODO ros::Time timeStamp;
+} OBJECT;
+
+
+// 直線を中点、傾き、長さで表す
+typedef struct straight {
+    cv::Point2f middle;
+    double degree;
+    double length;
+} STRAIGHT;
+
 namespace autonomous
 {
 
@@ -266,6 +285,8 @@ namespace autonomous
         // LED
         void *map_base2;
 #endif
+
+
 /*
         rclcpp::Subscription<std_msgs::msg::UInt8MultiArray>::SharedPtr image_sub_ ;
         rclcpp::Subscription<std_msgs::msg::String>::SharedPtr red_pub_;

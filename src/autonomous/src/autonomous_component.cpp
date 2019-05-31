@@ -26,24 +26,6 @@ inline double get_time_sec(void) {
     return static_cast<double>(duration_cast<nanoseconds>(steady_clock::now().time_since_epoch()).count()) / 1000000000;
 }
 
-typedef struct object {
-public:
-    // オブジェクトの種類
-    // obstacle, intersection, people
-    std::string objType;
-    int beforeX;
-    int beforeY;
-    int findCnt;
-    //TODO ros::Time timeStamp;
-} OBJECT;
-
-
-// 直線を中点、傾き、長さで表す
-typedef struct straight {
-    cv::Point2f middle;
-    double degree;
-    double length;
-} STRAIGHT;
 
 // map_data[y][x][0]がタイルの種類
 // map_data[y][x][1]が向きを表している
@@ -108,12 +90,12 @@ namespace autonomous {
         // init start
         // TODO キャリブレーションファイル読み込み
         // cv::FileStorage fs((std::string) params["project_folder"] + "/calibration.yml", cv::FileStorage::READ);
-        cv::FileStorage fs(("/calibration.yml", cv::FileStorage::READ);
+        cv::FileStorage fs("/calibration.yml", cv::FileStorage::READ);
         fs["mtx"] >> camera_mtx;
         fs["dist"] >> camera_dist;
         fs.release();
         // init end
-        
+
         twist_pub = create_publisher<geometry_msgs::msg::Twist>("/cmd_vel", 1);
         signal_search_ = create_publisher<std_msgs::msg::String>("/signal_search_type", 1);
 
