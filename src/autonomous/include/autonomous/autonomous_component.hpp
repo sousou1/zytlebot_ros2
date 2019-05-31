@@ -96,7 +96,7 @@ public:
     int beforeX;
     int beforeY;
     int findCnt;
-    //TODO ros::Time timeStamp;
+    rclcpp::Time timeStamp;
 } OBJECT;
 
 
@@ -116,7 +116,7 @@ namespace autonomous
         AUTONOMOUS_PUBLIC Autonomous();
 
     private:
-        ros::Timer led_timer;
+        rclcpp::Timer led_timer;
 
         bool red_flag;
 
@@ -170,10 +170,10 @@ namespace autonomous
         // 検出された直線のx座標
         int detected_line_x;
 
-        ros::Time phaseStartTime;
-        ros::Time tileUpdatedTime;
-        ros::Time line_lost_time;
-        ros::Time cycleTime;
+        rclcpp::Time phaseStartTime;
+        rclcpp::Time tileUpdatedTime;
+        rclcpp::Time line_lost_time;
+        rclcpp::Time cycleTime;
 
         // change phaseで初期化
         // bottomにオブジェクトが到達したかどうか
@@ -201,7 +201,7 @@ namespace autonomous
         bool curveAfterCrosswalk;
         bool intersectionAfterCrosswalk;
 
-        string SW_CHANGE_PHASE;
+        std::string SW_CHANGE_PHASE;
 
         double mileage;
         double phaseRunMileage;
