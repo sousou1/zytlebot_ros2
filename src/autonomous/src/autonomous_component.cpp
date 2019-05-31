@@ -123,7 +123,7 @@ namespace autonomous {
         std::list <OBJECT> objects;
 
 
-        PHASE_INFO_BACKUP backupInfo;
+        // PHASE_INFO_BACKUP backupInfo;
 
         // 次のtileを保存
         int next_tile_x;
@@ -177,7 +177,7 @@ namespace autonomous {
         // テンプレートマッチングで探す形
         std::string searchType;
 
-        XmlRpc::XmlRpcValue params;
+        //XmlRpc::XmlRpcValue params;
 
         cv::Mat template_right_T;
         cv::Mat template_left_T;
@@ -278,8 +278,9 @@ namespace autonomous {
 
 
         // init start
-        // キャリブレーションファイル読み込み
-        cv::FileStorage fs((std::string) params["project_folder"] + "/calibration.yml", cv::FileStorage::READ);
+        // TODO キャリブレーションファイル読み込み
+        // cv::FileStorage fs((std::string) params["project_folder"] + "/calibration.yml", cv::FileStorage::READ);
+        cv::FileStorage fs(("/calibration.yml", cv::FileStorage::READ);
         fs["mtx"] >> camera_mtx;
         fs["dist"] >> camera_dist;
         fs.release();
@@ -309,7 +310,7 @@ namespace autonomous {
 */
     }
 
-    void Autonomous::red_flag_update(const std_msgs::String &msg) {
+    void Autonomous::red_flag_update(const std_msgs::msg::String &msg) {
         if (msg.data == "true") {
             red_flag = true;
         } else {
@@ -320,7 +321,7 @@ namespace autonomous {
         cout << red_flag << endl;
     }
 
-    void Autonomous::image_cb(const std_msgs::msg::UInt8MultiArrayPtr msg) {
+    void Autonomous::image_cb(const std_msgs::msg::UInt8MultiArray &msg) {
         cout << "doing" << endl;
     }
 
