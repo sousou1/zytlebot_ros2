@@ -116,7 +116,7 @@ namespace autonomous
         AUTONOMOUS_PUBLIC Autonomous();
 
     private:
-        rclcpp::Timer led_timer;
+        // rclcpp::Timer led_timer;
 
         bool red_flag;
 
