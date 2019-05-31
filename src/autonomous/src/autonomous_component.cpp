@@ -311,13 +311,13 @@ namespace autonomous {
     }
 
     void Autonomous::red_flag_update(const std_msgs::msg::String::SharedPtr msg) {
-        if (msg.data == "true") {
+        if (msg->data == "true") {
             red_flag = true;
         } else {
             red_flag = false;
         }
 
-        cout << msg.data << endl;
+        cout << msg->data << endl;
         cout << red_flag << endl;
     }
 
