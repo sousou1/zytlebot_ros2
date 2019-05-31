@@ -10,7 +10,7 @@
 #define DEBUG false
 
 #define FATAL do { fprintf(stderr, "Error at line %d, file %s (%d) [%s]\n", \
-						   __LINE__, __FILE__, errno, strerror(errno)); exit(1); } while(0)
+                           __LINE__, __FILE__, errno, strerror(errno)); exit(1); } while(0)
 
 #define MAP_SIZE 4096UL
 #define MAP_MASK (MAP_SIZE - 1)
@@ -21,9 +21,11 @@ using namespace cv;
 using std::placeholders::_1;
 
 using namespace std::chrono;
-inline double get_time_sec(void){
-    return static_cast<double>(duration_cast<nanoseconds>(steady_clock::now().time_since_epoch()).count())/1000000000;
+
+inline double get_time_sec(void) {
+    return static_cast<double>(duration_cast<nanoseconds>(steady_clock::now().time_since_epoch()).count()) / 1000000000;
 }
+
 typedef struct object {
 public:
     // オブジェクトの種類
@@ -72,17 +74,10 @@ now_phaseについて
  * 右カーブ直後の横断歩道の認識が苦手なため、afterCurveSkipフラグによってスキップさせている
  */
 
-namespace autonomous
-{
+namespace autonomous {
 
     Autonomous::Autonomous()
-            : Node("autonomous")
-    {
-        pub_ = create_publisher<greeting_msg::msg::Greeting>("greeting");
-
-        sub_ = this->create_subscription<std_msgs::msg::String>(
-                "autonomous", std::bind(&Autonomous::display_greeting, this, _1));
-
+            : Node("autonomous") {
 
         ros::Timer led_timer;
 
@@ -92,9 +87,9 @@ namespace autonomous
         int BIRDSEYE_LENGTH, CAMERA_WIDTH, CAMERA_HEIGHT;
 
         double BURGER_MAX_LIN_VEL, BURGER_MAX_ANG_VEL, RIGHT_CURVE_START_LOST_LINE_TIME, LEFT_CURVE_START_LOST_LINE_TIME, RIGHT_CURVE_END_MARGIN_TIME, RIGHT_CURVE_END_TIME,
-                RIGHT_CURVE_VEL , RIGHT_CURVE_ROT , LEFT_CURVE_END_TIME , LEFT_CURVE_END_MARGIN_TIME , LEFT_CURVE_VEL , LEFT_CURVE_ROT , LEFT_CURVE_AFTER_ROT ,
-                AVOID_OBSTACLE_VEL , AVOID_OBSTACLE_ROT , AVOID_ROT_TIME , AVOID_ROT_STRAIGHT , AVOID_STRAIGHT_TIME , AVOID_BEFORE_STRAIGHT_MARGIN_TIME , INTERSECTION_PREDICTION_TIME_RATIO , DETECT_TEMPLATE_RATE,
-                CROSSWALK_UNDER_MARGIN, RIGHT_CURVE_UNDER_MARGIN , INTERSECTION_PREDICTION_UNDER_MARGIN , INTERSECTION_CURVE_START_FLAG_RATIO , RUN_LINE , RUN_LINE_MARGIN , WIDTH_RATIO , HEIGHT_H , HEIGHT_L, INTERSECTION_STRAIGHT_TIME;
+                RIGHT_CURVE_VEL, RIGHT_CURVE_ROT, LEFT_CURVE_END_TIME, LEFT_CURVE_END_MARGIN_TIME, LEFT_CURVE_VEL, LEFT_CURVE_ROT, LEFT_CURVE_AFTER_ROT,
+                AVOID_OBSTACLE_VEL, AVOID_OBSTACLE_ROT, AVOID_ROT_TIME, AVOID_ROT_STRAIGHT, AVOID_STRAIGHT_TIME, AVOID_BEFORE_STRAIGHT_MARGIN_TIME, INTERSECTION_PREDICTION_TIME_RATIO, DETECT_TEMPLATE_RATE,
+                CROSSWALK_UNDER_MARGIN, RIGHT_CURVE_UNDER_MARGIN, INTERSECTION_PREDICTION_UNDER_MARGIN, INTERSECTION_CURVE_START_FLAG_RATIO, RUN_LINE, RUN_LINE_MARGIN, WIDTH_RATIO, HEIGHT_H, HEIGHT_L, INTERSECTION_STRAIGHT_TIME;
 
 
         int Hue_l, Hue_h, Saturation_l, Saturation_h, Lightness_l, Lightness_h;
@@ -102,9 +97,8 @@ namespace autonomous
         cv::Mat camera_mtx;
         cv::Mat camera_dist;
 
-        geometry_msgs::Twist twist;
+        geometry_msgs::msg::Twist twist;
 
-        ros::Publisher twist_pub;
         // cv::Mat curve_image;
         int line_lost_cnt;
         int curve_detect_cnt;
@@ -195,7 +189,7 @@ namespace autonomous
         cv::Mat aroundDebug;
 
         // BackgroundSubtractorMOG2
-        cv::Ptr<cv::BackgroundSubtractorMOG2> bgs;
+        cv::Ptr <cv::BackgroundSubtractorMOG2> bgs;
         cv::Mat bgmask, out_frame;
 
         // 歪補正に使う
@@ -244,15 +238,15 @@ namespace autonomous
 #if !DEBUG
         // devmem
         int fd;
-        void* map_base;
-        void* virt_addr;
-        void* virt_addr2;
+        void *map_base;
+        void *virt_addr;
+        void *virt_addr2;
         bool sw1_flag;
         bool sw2_flag;
         bool sw3_flag;
 
         // LED
-        void* map_base2;
+        void *map_base2;
 #endif
 
 
@@ -262,9 +256,9 @@ namespace autonomous
         // Switch
 
         //initialize
-        if((fd = open("/dev/mem", O_RDWR | O_SYNC)) == -1) FATAL;
+        if ((fd = open("/dev/mem", O_RDWR | O_SYNC)) == -1) FATAL;
         map_base = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, physical_address & ~MAP_MASK);
-        if(map_base == (void *) -1) FATAL;
+        if (map_base == (void *) -1) FATAL;
         virt_addr = map_base + (physical_address & MAP_MASK);
         sw1_flag = false;
         sw2_flag = false;
@@ -276,7 +270,7 @@ namespace autonomous
 
         //initialize
         map_base2 = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, physical_address2 & ~MAP_MASK);
-        if(map_base2 == (void *) -1) FATAL;
+        if (map_base2 == (void *) -1) FATAL;
         virt_addr2 = map_base2 + (physical_address2 & MAP_MASK);
 #endif
 
@@ -314,22 +308,23 @@ namespace autonomous
                 "/red_flag", std::bind(&Autonomous::redFlagUpdate, this, _1));
 */
     }
-    -    void Autonomous::red_flag_update(const std_msgs::String &msg) {
-        -        if (msg.data == "true") {
-            -            red_flag = true;
-            -        } else {
-            -            red_flag = false;
-            -        }
-        -
-                -        cout << msg.data << endl;
-        -        cout << red_flag << endl;
-        -    }
-    -
-    -    void Autonomous::image_cb(const std_msgs::msg:::UInt8MultiArrayPtr msg)
-    -    {
-    -        cout << "doing" << endl;
-}
+
+    void Autonomous::red_flag_update(const std_msgs::String &msg) {
+        if (msg.data == "true") {
+            red_flag = true;
+        } else {
+            red_flag = false;
+        }
+
+        cout << msg.data << endl;
+        cout << red_flag << endl;
+    }
+
+    void Autonomous::image_cb(const std_msgs::msg::UInt8MultiArrayPtr msg) {
+        cout << "doing" << endl;
+    }
 
 } // namespace autorace
 
-CLASS_LOADER_REGISTER_CLASS(autonomous::Autonomous, rclcpp::Node)
+CLASS_LOADER_REGISTER_CLASS(autonomous::Autonomous, rclcpp::Node
+)
