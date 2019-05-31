@@ -310,7 +310,7 @@ namespace autonomous {
 */
     }
 
-    void Autonomous::red_flag_update(const std_msgs::msg::String &msg) {
+    void Autonomous::red_flag_update(const std_msgs::msg::String::SharedPtr msg) {
         if (msg.data == "true") {
             red_flag = true;
         } else {
@@ -321,7 +321,7 @@ namespace autonomous {
         cout << red_flag << endl;
     }
 
-    void Autonomous::image_cb(const std_msgs::msg::UInt8MultiArray &msg) {
+    void Autonomous::image_cb(const std_msgs::msg::UInt8MultiArray::SharedPtr msg) {
         cout << "doing" << endl;
     }
 
