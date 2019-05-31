@@ -88,6 +88,7 @@ extern "C" {
 #include <json_lib/json11.hpp>
 
 #define DEBUG true
+#define SIM true
 
 typedef struct object {
 public:
@@ -296,8 +297,12 @@ namespace autonomous
         rclcpp::Publisher<std_msgs::msg::String>::SharedPtr signal_search_;
 
         void red_flag_update(const std_msgs::msg::String::SharedPtr msg);
+#ifdef SIM
+        void image_cb(const sensor_msgs::msg::ImageConstPtr msg);
+#else
         void image_cb(const std_msgs::msg::UInt8MultiArray::SharedPtr msg);
-        // void autonomous();
+#endif
+        void set_param();
     };
 
 } // namespace autonomous
