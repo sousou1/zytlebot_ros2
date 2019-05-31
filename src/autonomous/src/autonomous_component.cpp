@@ -305,10 +305,10 @@ namespace autonomous {
         detected_line_x = 0;
 
         // start時間を初期化
-        phaseStartTime = ros::Time::now();
-        line_lost_time = ros::Time::now();
-        tileUpdatedTime = ros::Time::now();
-        cycleTime = ros::Time::now();
+        phaseStartTime = rclcpp::Time::now();
+        line_lost_time = rclcpp::Time::now();
+        tileUpdatedTime = rclcpp::Time::now();
+        cycleTime = rclcpp::Time::now();
 
         now_phase = "straight";
 
