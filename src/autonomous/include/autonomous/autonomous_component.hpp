@@ -104,8 +104,8 @@ namespace autonomous
         rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr twist_pub;
         rclcpp::Publisher<std_msgs::msg::String>::SharedPtr signal_search_;
 
-        void red_flag_update();
-        void image_cb();
+        void red_flag_update(const std_msgs::msg::String::SharedPtr msg);
+        void image_cb(const std_msgs::msg::UInt8MultiArray::SharedPtr msg);
         // void autonomous();
     };
 
