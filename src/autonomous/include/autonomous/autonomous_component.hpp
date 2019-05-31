@@ -87,6 +87,7 @@ extern "C" {
 #include <sstream>
 #include <json_lib/json11.hpp>
 
+#define DEBUG true
 
 typedef struct object {
 public:

@@ -7,7 +7,7 @@
 
 #define PI 3.141592653589793
 
-#define DEBUG false
+
 
 #define FATAL do { fprintf(stderr, "Error at line %d, file %s (%d) [%s]\n", \
                            __LINE__, __FILE__, errno, strerror(errno)); exit(1); } while(0)
