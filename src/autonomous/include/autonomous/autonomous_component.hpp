@@ -307,11 +307,11 @@ namespace autonomous
         rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr twist_pub;
         rclcpp::Publisher<std_msgs::msg::String>::SharedPtr signal_search_;
 
-        void red_flag_update(const std_msgs::msg::String::SharedPtr &msg);
+        void red_flag_update(const std_msgs::msg::String::SharedPtr msg);
 #ifdef SIM
-        void image_cb(const sensor_msgs::msg::Image::ConstRawPtr &msg);
+        void image_cb(const sensor_msgs::msg::Image::ConstRawPtr msg);
 #else
-        void image_cb(const std_msgs::msg::UInt8MultiArray::SharedPtr &msg);
+        void image_cb(const std_msgs::msg::UInt8MultiArray::SharedPtr msg);
 #endif
         void set_param();
     };
