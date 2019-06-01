@@ -120,11 +120,13 @@ namespace autonomous {
         cout << msg->data << endl;
         cout << red_flag << endl;
     }
+/*
 #ifdef SIM
     void Autonomous::image_cb(const sensor_msgs::msg::Image::ConstSharedPtr msg){
 #else
+ */
     void Autonomous::image_cb(const std_msgs::msg::UInt8MultiArray::SharedPtr msg){
-#endif
+//#endif
 
 #ifdef SIM
         cv_bridge::CvImagePtr cv_ptr;
@@ -509,7 +511,7 @@ namespace autonomous {
 
 
 // phaseの変更ともろもろの値の初期化
-    void changePhase(std::string next_phase) {
+    void Autonomous::changePhase(std::string next_phase) {
         std::cout << "change phase!" << next_phase << std::endl;
         // 前のphaseの結果によって変更される値を処理する
         now_phase = next_phase;
@@ -517,7 +519,7 @@ namespace autonomous {
         resetFlag();
     }
 
-    void resetFlag() {
+    void Autonomous::resetFlag() {
         objects.clear();
         phaseRunMileage = 0;
         curve_detect_cnt = 0;
@@ -600,7 +602,7 @@ namespace autonomous {
  * road7 T字路(1が右)
  * road8 十字路
  */
-    void searchObject() {
+    void Autonomous::searchObject() {
         double now = get_time_sec();
 
         // タイルの種類 1~8がそれぞれFPTのroad meshに対応
@@ -712,7 +714,7 @@ namespace autonomous {
     }
 
 // デバッグ用、次のタイルをスキップする
-    void skipNextSearch() {
+    void Autonomous::skipNextSearch() {
         double now = get_time_sec();
 
         // タイルの種類 1~8がそれぞれFPTのroad meshに対応
@@ -821,7 +823,7 @@ namespace autonomous {
 // タイルが見つかったときに呼び出される
 // 今next_tileとなっているものを現在位置とし、今の方向と現在位置から次のタイル目標を決定する
 // road4は特徴のない直線のため無視する
-    void setNextTile() {
+    void Autonomous::setNextTile() {
         int next_x = next_tile_x;
         int next_y = next_tile_y;
 
@@ -873,7 +875,7 @@ namespace autonomous {
     }
 
 // 次に探すべき模様を決定する
-    void setSearchType() {
+    void Autonomous::setSearchType() {
         // searchTypeの更新
         // タイルの種類 1~8がそれぞれFPTのroad meshに対応
         int tileType = map_data[next_tile_y][next_tile_x][0];
@@ -919,7 +921,7 @@ namespace autonomous {
 /////////実際に動かす関数//////////////////
 
 // 秒ストップ
-    void crosswalkRedStop() {
+    void Autonomous::crosswalkRedStop() {
         if (red_flag) {
             double now = get_time_sec();
             twist.linear.x = 0;
@@ -972,7 +974,7 @@ namespace autonomous {
 
 // 決め打ちで左カーブ
 // 入射時の速度でカーブ時間を変更
-    void leftTurn() {
+    void Autonomous::leftTurn() {
         Left_LED = true; // LED
         twist.linear.x = LEFT_CURVE_VEL;
         twist.angular.z = LEFT_CURVE_ROT;
@@ -987,7 +989,7 @@ namespace autonomous {
 
 // 検知しながら左カーブ
 // TODO 曲がるタイミングが重要！
-    void leftTurnDetect(cv::Mat aroundImage) {
+    void Autonomous::leftTurnDetect(cv::Mat aroundImage) {
         double now = get_time_sec();
         if (now - phaseStartTime > LEFT_CURVE_END_TIME + LEFT_CURVE_END_MARGIN_TIME) {
             changePhase("search_line");
@@ -1050,7 +1052,7 @@ namespace autonomous {
         limitedTwistPub();
     }
 
-    void testTurnDetect(cv::Mat aroundImage) {
+    void Autonomous::testTurnDetect(cv::Mat aroundImage) {
         // 左側をハフ変換
         cv::Mat temp_dst;
         cv::Canny(aroundImage, temp_dst, 50, 200, 3);
@@ -1107,7 +1109,7 @@ namespace autonomous {
     }
 
 // 決め打ちで右カーブ
-    void determinationRightTurn() {
+    void Autonomous::determinationRightTurn() {
         Right_LED = true;
         twist.linear.x = RIGHT_CURVE_VEL;
         twist.angular.z = RIGHT_CURVE_ROT;
@@ -1135,7 +1137,7 @@ namespace autonomous {
  * 交差点の右カーブの補正
  * カーブ中に目的のレーンの左車線を検索し、検知した左車線の延長がRUN_LINEに来るようにする
  */
-    void rightTurnDetect(cv::Mat image){
+    void Autonomous::rightTurnDetect(cv::Mat image){
         double now = get_time_sec();
         if (now - phaseStartTime > RIGHT_CURVE_END_TIME + RIGHT_CURVE_END_MARGIN_TIME) {
             changePhase("search_line");
@@ -1196,7 +1198,7 @@ namespace autonomous {
 
 // 障害物検知
 // 決め打ちで右にカーブし、決め打ちで左に戻る
-    void  obstacleAvoidance(cv::Mat road_white_binary, cv::Mat aroundWhiteBinary) {
+    void Autonomous:: obstacleAvoidance(cv::Mat road_white_binary, cv::Mat aroundWhiteBinary) {
         double now = get_time_sec();
         //　右車線に向けて回転
         if (now - phaseStartTime <  AVOID_ROT_TIME) {
@@ -1256,7 +1258,7 @@ namespace autonomous {
 
 // カーブを曲がるときにラインを追跡して挙動決定
 // 交差点で曲がる時はまた別
-    void rightCurveTrace(cv::Mat road_binary) {
+    void Autonomous::rightCurveTrace(cv::Mat road_binary) {
 
         int before_line_x = detected_line_x;
 
@@ -1289,7 +1291,7 @@ namespace autonomous {
 
 
 // 白に二値化された画像から一番左下のラインを読み取ってdetected_line_xを更新する
-    void updateLeftLine(cv::Mat road_binary) {
+    void Autonomous::updateLeftLine(cv::Mat road_binary) {
         cv::Mat road_hough;
         cv::Canny(road_binary, road_hough, 50, 200, 3);
 
@@ -1337,8 +1339,8 @@ namespace autonomous {
 // ラインがあればtrue
 // intは+1で左, 0で直進, -1で右
 // ラインが見つからなければ左に回転
-// void lineTrace(int vel, int dir) {
-    void lineTrace(float degree_average, cv::Mat road_white_binary) {
+// void Autonomous::lineTrace(int vel, int dir) {
+    void Autonomous::lineTrace(float degree_average, cv::Mat road_white_binary) {
 
         if (find_left_line) {
             // 中点が右過ぎたら左に、左過ぎたら右に曲がる
@@ -1364,7 +1366,7 @@ namespace autonomous {
         }
     }
 
-    void limitedTwistPub() {
+    void Autonomous::limitedTwistPub() {
         if (twist.linear.x > BURGER_MAX_LIN_VEL) twist.linear.x = BURGER_MAX_LIN_VEL;
         if (twist.linear.x < 0) twist.linear.x = 0;
         if (twist.angular.z > BURGER_MAX_ANG_VEL) twist.angular.z = BURGER_MAX_ANG_VEL;
@@ -1390,7 +1392,7 @@ namespace autonomous {
     }
 
 // ラインが見つからないときに首を振ることで直線を探す
-    void searchLine() {
+    void Autonomous::searchLine() {
         double now = get_time_sec();
         if (find_left_line) {
             changePhase("straight");
@@ -1423,12 +1425,12 @@ namespace autonomous {
  * 人形を見つけて止まっているとき、phaseStartTimeをその分遅らせる
  *
  */
-    void stopForFigure() {
+    void Autonomous::stopForFigure() {
         phaseStartTime = phaseStartTime + get_time_sec() - cycleTime;
 
     }
 
-    void searchRightLaneRightT(bool nowFindRightLaneRightT) {
+    void Autonomous::searchRightLaneRightT(bool nowFindRightLaneRightT) {
         double now = get_time_sec();
         if (nowFindRightLaneRightT) {
             changePhase("straight");
@@ -1591,7 +1593,7 @@ namespace autonomous {
     }
 
 // objTypeに一致するオブジェクトをすべて消去
-    void deleteObject(std::string objType) {
+    void Autonomous::deleteObject(std::string objType) {
         std::list<OBJECT>::iterator itr;
         for (itr = objects.begin(); itr != objects.end();) {
             OBJECT compare = *itr;
@@ -1605,7 +1607,7 @@ namespace autonomous {
 
 // オブジェクトを最も遠いもの(Yが小さいもの)に更新
 // ひとつ見つけた時点で終了するため、この関数で追加するobjTypeはaddObjectを用いない
-    void addMostDistantObject(std::string objType, int objectX, int objectY) {
+    void Autonomous::addMostDistantObject(std::string objType, int objectX, int objectY) {
         bool findObj = false;
         std::list<OBJECT>::iterator itr;
         for (itr = objects.begin(); itr != objects.end();) {
@@ -1631,7 +1633,7 @@ namespace autonomous {
 
 // オブジェクトを発見した時、それが以前発見されたものと一致するかどうかを調べ、一致しなかったら追加
 // 一致する場合タイムスタンプと位置を更新し、カウントを1増やす
-    void addObject(std::string objType, int objectX, int objectY) {
+    void Autonomous::addObject(std::string objType, int objectX, int objectY) {
         bool findObj = false;
         /*
         for(OBJECT compare : objects) {
@@ -1665,7 +1667,7 @@ namespace autonomous {
         }
     }
 
-    void searchRedObs(const cv::Mat& birds_eye) {
+    void Autonomous::searchRedObs(const cv::Mat& birds_eye) {
         cv::Mat red_mask1, red_mask2, red_image, red_hsv_image;
         cv::Mat redRoi(birds_eye, cv::Rect(BIRDSEYE_LENGTH * RUN_LINE, BIRDSEYE_LENGTH * 0.3, BIRDSEYE_LENGTH / 2, BIRDSEYE_LENGTH / 2));
         cv::cvtColor(redRoi, red_hsv_image, CV_BGR2HSV);
@@ -1695,7 +1697,7 @@ namespace autonomous {
         }
     }
 /* TODO search_figure
-    void searchFigure(const cv::Mat& birds_eye) {
+    void Autonomous::searchFigure(const cv::Mat& birds_eye) {
         cv::Mat skin_mask, skin_image, skin_hsv_image;
         cv::Mat skinRoi(birds_eye, cv::Rect(BIRDSEYE_LENGTH * RUN_LINE, BIRDSEYE_LENGTH * 0.5, BIRDSEYE_LENGTH / 2,
                                             BIRDSEYE_LENGTH / 2));
@@ -1731,7 +1733,7 @@ namespace autonomous {
 
 
 // 重いから却下になりそう
-    void detectSkin(const cv::Mat& image){
+    void Autonomous::detectSkin(const cv::Mat& image){
         cv::Mat skin_mask, skin_image, skin_hsv_image, result_image;
         // cv::Mat redRoi(birds_eye, cv::Rect(BIRDSEYE_LENGTH * 0.2, BIRDSEYE_LENGTH / 2, BIRDSEYE_LENGTH / 2, BIRDSEYE_LENGTH / 2));
         cv::cvtColor(image, skin_hsv_image, CV_BGR2HSV);
@@ -1758,7 +1760,7 @@ namespace autonomous {
 */
 
 /*
-    void skinSegments(const Mat& img, Mat& mask, Mat& dst)
+    void Autonomous::skinSegments(const Mat& img, Mat& mask, Mat& dst)
     {
         int niters = 2;
         vector<vector<Point> > contours;
@@ -1816,7 +1818,7 @@ namespace autonomous {
  * マップデータから次の判別すべきタイルは判断できるので、判断されたタイルに適した画像を検出すればよい
  * 判別すべき画像はnextSearchObjectで保持しておく
  */
-    void intersectionDetectionByTemplateMatching(cv::Mat aroundWhiteBinary, double template_angle)
+    void Autonomous::intersectionDetectionByTemplateMatching(cv::Mat aroundWhiteBinary, double template_angle)
     {
         cv::Mat template_img;
 
@@ -1882,7 +1884,7 @@ namespace autonomous {
         // もし、次曲がるなら、それに応じてLEDを点灯
     }
 
-    void testTemplateMatching(cv::Mat aroundWhiteBinary, cv::Mat template_img, cv::Scalar color) {
+    void Autonomous::testTemplateMatching(cv::Mat aroundWhiteBinary, cv::Mat template_img, cv::Scalar color) {
         double maxVal;
         cv::Mat result;
 
@@ -1904,7 +1906,7 @@ namespace autonomous {
     }
 
 // 現在のオブジェクト状況を出力
-    void testOutputObject() {
+    void Autonomous::testOutputObject() {
         int objCnt = 1;
         std::list<OBJECT>::iterator itr;
         for (itr = objects.begin(); itr != objects.end();) {
@@ -1918,7 +1920,7 @@ namespace autonomous {
         }
     }
 // オブジェクトが一定時間発見されていなければ破棄
-    void updateObject() {
+    void Autonomous::updateObject() {
         double now = get_time_sec();
         std::list<OBJECT>::iterator itr;
         int objCnt;
@@ -1954,6 +1956,6 @@ namespace autonomous {
         }
     }
 
-    } // namespace autorace
+} // namespace autorace
 
 CLASS_LOADER_REGISTER_CLASS(autonomous::Autonomous, rclcpp::Node)
