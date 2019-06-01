@@ -102,7 +102,7 @@ namespace autonomous {
                 "/camera/image_raw", std::bind(&Autonomous::image_cb, this, _1));
 
 #else
-        image_sub_ = this->create_subscription<std_msgs::msg:::UInt8MultiArray>(
+        image_sub_ = this->create_subscription<std_msgs::msg::UInt8MultiArray>(
                 "/pcam/image_array", std::bind(&Autonomous::image_cb, this, _1));
 
 #endif
