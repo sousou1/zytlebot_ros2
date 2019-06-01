@@ -1388,7 +1388,7 @@ namespace autonomous {
         before_twist_x = twist.linear.x;
 
         auto pub_twist = std::make_shared<geometry_msgs::msg::Twist>();
-        pub_twist->data = twist;
+        pub_twist.data = twist;
         twist_pub->publish(pub_twist);
     }
 
