@@ -137,8 +137,6 @@ namespace autonomous {
             return;
         }
         cv::Mat caliblated = cv_ptr->image;
-        cv::imshow("image", caliblated);
-
         cv::imshow("raw", cv_ptr);
 
 #else
