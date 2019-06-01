@@ -97,8 +97,7 @@ namespace autonomous {
 
 #if SIM
 
-        image_sub_ = this->create_subscription<sensor_msgs::msg::Image::ConstSharedPtr>(
-    "/camera/image_raw", std::bind(&Autonomous::image_cb, this, _1));
+        image_sub_ = this->create_subscription<sensor_msgs::msg::Image::ConstSharedPtr>("camera/image_raw", std::bind(&Autonomous::image_cb, this, _1));
 
 #else
         image_sub_ = this->create_subscription<std_msgs::msg:::UInt8MultiArrayPtr>(
