@@ -53,7 +53,7 @@ namespace pcam {
             // 8. Store Image in OpenCV Data Type
             for (int j = 0; j < num_planes; j++) {
                 memcpy(&(camdata->data[0]), buffers[buf.index].start[j], WIDTH * HEIGHT * 2);
-                pub.publish(camdata);
+                image_pub_->publish(camdata);
                 ROS_INFO("Pcam Published something!");
             }
 
