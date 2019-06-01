@@ -26,7 +26,7 @@ find_package(OpenCV REQUIRED)
 find_package(class_loader REQUIRED)
 
 include_directories(include)
-add_library(pcam_component SHARED src/pcam_component.cpp include/json_lib/json11.cpp)
+add_library(pcam_component SHARED src/pcam_component.cpp)
 target_compile_definitions(pcam_component PRIVATE "PCAM_BUILDING_DLL")
 ament_target_dependencies(pcam_component
         sensor_msgs
