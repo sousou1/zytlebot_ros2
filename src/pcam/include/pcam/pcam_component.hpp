@@ -131,10 +131,9 @@ namespace pcam
         struct v4l2_requestbuffers reqbuf;
         int MAX_BUF_COUNT;
 
-        XmlRpc::XmlRpcValue params;
         int pcam_frame;
 
-        std_msgs::msg::UInt8MultiArrayPtr camdata;
+        std_msgs::msg::UInt8MultiArray::SharedPtr camdata;
         struct v4l2_buffer buf;
 
         struct v4l2_plane planes[FMT_NUM_PLANES];
@@ -149,7 +148,7 @@ namespace pcam
 
         void reset();
 
-        void get_image() {
+        void get_image();
         };
 } // namespace pcam
 
