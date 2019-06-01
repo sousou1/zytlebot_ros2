@@ -54,7 +54,7 @@ namespace pcam {
             for (int j = 0; j < num_planes; j++) {
                 memcpy(&(camdata->data[0]), buffers[buf.index].start[j], WIDTH * HEIGHT * 2);
                 image_pub_->publish(camdata);
-                ROS_INFO("Pcam Published something!");
+                std::cout << "pcam publish" << std::endl;
             }
 
             std::cout << "buf.index " << buf.index << std::endl;
@@ -195,7 +195,7 @@ namespace pcam {
 
         std::vector<uint8_t> vec = std::vector<uint8_t>(WIDTH*HEIGHT*2);
 
-        std_msgs::UInt8MultiArrayPtr camdatatemp(new std_msgs::UInt8MultiArray);
+        std_msgs::UInt8MultiArray::SharedPtr camdatatemp(new std_msgs::UInt8MultiArray);
         camdatatemp->data = vec;
 
         camdata = camdatatemp;
