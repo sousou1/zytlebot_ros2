@@ -131,10 +131,10 @@ namespace autonomous {
         cv_bridge::CvImagePtr cv_ptr;
         try {
             // ROSからOpenCVの形式にtoCvCopy()で変換。cv_ptr->imageがcv::Matフォーマット。
-            cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::ImageEncodings::BGR8);
+            cv_ptr = cv_bridge::toCvCopy(msg, "bgr8");
         }
         catch (cv_bridge::Exception &e) {
-            ROS_ERROR("cv_bridge exception: %s", e.what());
+            cout << "error image" << endl;
             return;
         }
         cv::Mat caliblated = cv_ptr->image;
@@ -283,13 +283,14 @@ namespace autonomous {
 
         cout << "json parse end" << endl;
 
+        /* TODO IMAGE folder
         template_right_T = cv::imread((std::string) params["project_folder"] + "/image/right_T.png", 1);
         template_left_T = cv::imread((std::string) params["project_folder"] + "/image/left_T.png", 1);
         template_under_T = cv::imread((std::string) params["project_folder"] + "/image/under_T.png", 1);
         template_crosswalk = cv::imread((std::string) params["project_folder"] + "/image/crosswalk.png", 1);
         template_right_curve = cv::imread((std::string) params["project_folder"] + "/image/right_curve.png", 1);
         template_intersection = cv::imread((std::string) params["project_folder"] + "/image/intersection.png", 1);
-
+         */
 
         find_left_line = false;
 
