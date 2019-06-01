@@ -886,16 +886,16 @@ namespace autonomous {
         int differenceDirection = (tileRot - now_dir + 4) % 4;
 
         auto how_signal_search = std::make_shared<std_msgs::msg::String>();
-        how_signal_search.data = "-1";
+        how_signal_search->data = "-1";
 
         if (tileType == 6) {
             // 外周横断歩道
             searchType = "crosswalk";
-            how_signal_search.data = "0";
+            how_signal_search->data = "0";
         } else if (tileType == 2 || tileType == 5) {
             // 交差点横断歩道
             searchType = "crosswalk";
-            how_signal_search.data = "1";
+            how_signal_search->data = "1";
         } else if (tileType == 7) { // T字路
             if(differenceDirection == 3) {
                 // T字路に左から入る
@@ -915,7 +915,7 @@ namespace autonomous {
             searchType = "";
         }
 
-        signal_search_.publish(how_signal_search);
+        signal_search_->publish(how_signal_search);
     }
 /////////実際に動かす関数//////////////////
 
@@ -1389,7 +1389,7 @@ namespace autonomous {
 
         auto pub_twist = std::make_shared<geometry_msgs::msg::Twist>();
         pub_twist->data = twist;
-        twist_pub.publish(pub_twist);
+        twist_pub->publish(pub_twist);
     }
 
 // ラインが見つからないときに首を振ることで直線を探す
