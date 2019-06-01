@@ -88,6 +88,12 @@ extern "C" {
 #include <sstream>
 #include <json_lib/json11.hpp>
 
+using namespace std::chrono;
+using namespace std;
+using namespace cv;
+
+using std::placeholders::_1;
+
 #define DEBUG true
 #define SIM true
 

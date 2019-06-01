@@ -15,12 +15,7 @@
 #define MAP_SIZE 4096UL
 #define MAP_MASK (MAP_SIZE - 1)
 
-using namespace std;
-using namespace cv;
 
-using std::placeholders::_1;
-
-using namespace std::chrono;
 
 
 
@@ -136,7 +131,7 @@ namespace autonomous {
         cv_bridge::CvImagePtr cv_ptr;
         try {
             // ROSからOpenCVの形式にtoCvCopy()で変換。cv_ptr->imageがcv::Matフォーマット。
-            cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
+            cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::ImageEncodings::BGR8);
         }
         catch (cv_bridge::Exception &e) {
             ROS_ERROR("cv_bridge exception: %s", e.what());
