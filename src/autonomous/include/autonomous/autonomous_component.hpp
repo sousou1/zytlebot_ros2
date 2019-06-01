@@ -95,7 +95,7 @@ using namespace cv;
 using std::placeholders::_1;
 
 #define DEBUG true
-#define SIM true
+#define SIM false
 
 typedef struct object {
 public:
@@ -303,7 +303,7 @@ namespace autonomous
 #if SIM
         rclcpp::Subscription<sensor_msgs::msg::Image>::ConstSharedPtr image_sub_ ;
 #else
-        rclcpp::Subscription<std_msgs::msg:::UInt8MultiArray>::SharedPtr image_sub_ ;
+        rclcpp::Subscription<std_msgs::msg::UInt8MultiArray>::SharedPtr image_sub_ ;
 #endif
         rclcpp::Subscription<std_msgs::msg::String>::SharedPtr red_pub_;
 
@@ -311,7 +311,7 @@ namespace autonomous
         rclcpp::Publisher<std_msgs::msg::String>::SharedPtr signal_search_;
 
         void red_flag_update(const std_msgs::msg::String::SharedPtr msg);
-#ifdef SIM
+#if SIM
         void image_cb(const sensor_msgs::msg::Image::ConstSharedPtr msg);
 #else
         void image_cb(const std_msgs::msg::UInt8MultiArray::SharedPtr msg);

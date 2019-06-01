@@ -15,7 +15,8 @@
 #define MAP_SIZE 4096UL
 #define MAP_MASK (MAP_SIZE - 1)
 
-
+#define DEBUG true
+#define SIM false
 
 
 
@@ -101,7 +102,7 @@ namespace autonomous {
                 "/camera/image_raw", std::bind(&Autonomous::image_cb, this, _1));
 
 #else
-        image_sub_ = this->create_subscription<std_msgs::msg:::UInt8MultiArray>(
+        image_sub_ = this->create_subscription<std_msgs::msg::UInt8MultiArray>(
                 "/pcam/image_array", std::bind(&Autonomous::image_cb, this, _1));
 
 #endif
@@ -120,13 +121,13 @@ namespace autonomous {
         cout << msg->data << endl;
         cout << red_flag << endl;
     }
-#ifdef SIM
+#if SIM
     void Autonomous::image_cb(const sensor_msgs::msg::Image::ConstSharedPtr msg){
 #else
     void Autonomous::image_cb(const std_msgs::msg::UInt8MultiArray::SharedPtr msg){
 #endif
 
-#ifdef SIM
+#if SIM
         cv_bridge::CvImagePtr cv_ptr;
         try {
             // ROSからOpenCVの形式にtoCvCopy()で変換。cv_ptr->imageがcv::Matフォーマット。
