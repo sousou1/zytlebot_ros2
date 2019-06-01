@@ -222,7 +222,7 @@ namespace autonomous {
                     detected_angle = degree_average;
                     // レーン検出してdetected_lineを更新、平均角度を求める
                     searchRedObs(birds_eye);
-                    if (now_phase == "straight" && FIGURE_SEARCH)searchFigure(birds_eye);
+                    // if (now_phase == "straight" && FIGURE_SEARCH)searchFigure(birds_eye);
                     intersectionDetectionByTemplateMatching(aroundWhiteBinary, degree_average);
                     searchObject();
                     lineTrace(degree_average, road_white_binary);
@@ -541,7 +541,7 @@ namespace autonomous {
 // 角度平均をとり、全体の角度が垂直になるようにする
 // 最も左車線を検出し、いい感じになるよう調整する
 // 車線が見つからない場合、find_left_lineがfalseになる
-    double detectLane(cv::Mat left_roi){
+    double Autonomous::detectLane(cv::Mat left_roi){
 
         std::vector <cv::Vec4i> left_lines = getHoughLinesP(left_roi, 20, 40, 5);
 
@@ -941,7 +941,7 @@ namespace autonomous {
 
 // 直線
 // 傾きからまっすぐ走らせる
-    double intersectionStraight(cv::Mat roadRoi) {
+    double Autonomous::intersectionStraight(cv::Mat roadRoi) {
         double now = get_time_sec();
         //　右車線に向けて回転
         if (now - phaseStartTime >  INTERSECTION_STRAIGHT_TIME) {
@@ -1459,7 +1459,7 @@ namespace autonomous {
 
 
 // imageを渡して俯瞰画像を得る
-    cv::Mat birdsEye(cv::Mat image) {
+    cv::Mat Autonomous::birdsEye(cv::Mat image) {
         int width = image.size().width;
         int height = image.size().height;
         // 奥行の広さ（小さいほど狭い）
@@ -1490,7 +1490,7 @@ namespace autonomous {
 
 // imageを渡して中央線の画像を得る
 //　精度が甘くても、一番下から表示できるように設定
-    cv::Mat birdsEyeAround(cv::Mat image) {
+    cv::Mat Autonomous::birdsEyeAround(cv::Mat image) {
         int width = image.size().width;
         int height = image.size().height;
         // 奥行の広さ（小さいほど狭い）
@@ -1523,7 +1523,7 @@ namespace autonomous {
 
 
 // 二点をSTRAIGHT構造体で返す
-    STRAIGHT toStraightStruct(cv::Vec4i line) {
+    STRAIGHT Autonomous::toStraightStruct(cv::Vec4i line) {
         STRAIGHT result;
 
         //中点
@@ -1544,7 +1544,7 @@ namespace autonomous {
 
 // 二点間の傾きを求め、長さをかけて重さとする
 // x1 y1, x2 y2
-    double lineWeight(cv::Vec4i line) {
+    double Autonomous::lineWeight(cv::Vec4i line) {
         // 距離
         double distance = (line[0] - line[2]) * (line[0] - line[2]) + (line[1] - line[3]) * (line[1] - line[3]);
 
@@ -1559,7 +1559,7 @@ namespace autonomous {
 
 
 // 白色検出（返り値はRGB）
-    cv::Mat whiteBinary(cv::Mat image) {
+    cv::Mat Autonomous::whiteBinary(cv::Mat image) {
         cv::Mat color_mask, result_image, hsv_image;
         cv::cvtColor(image, hsv_image, CV_BGR2HSV);
         cv::inRange(hsv_image, cv::Scalar(Hue_l, Saturation_l, Lightness_l, 0),
@@ -1573,7 +1573,7 @@ namespace autonomous {
 // 水平のラインと縦のラインが近しいか計測
 // 片方の点がもう一つの線のx,yで形作られる◇の中に存在するかどうかで判別
 // 1なら右、-1なら左を示す
-    int crossCheck(cv::Vec4i horiLine, cv::Vec4i verLine) {
+    int Autonomous::crossCheck(cv::Vec4i horiLine, cv::Vec4i verLine) {
         int dir = 0;
         if ((horiLine[0] > verLine[0] - 5) && (horiLine[0] < verLine[2] + 5)) {
             if ((horiLine[1] > verLine[1] - 5) && (horiLine[1] < verLine[3] + 5)) {
