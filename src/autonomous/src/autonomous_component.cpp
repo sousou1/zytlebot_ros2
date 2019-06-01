@@ -52,6 +52,7 @@ namespace autonomous {
 
     Autonomous::Autonomous()
             : Node("autonomous") {
+        /*
 #if !DEBUG
         off_t physical_address = 0x41210000;
 
@@ -75,14 +76,14 @@ namespace autonomous {
         if (map_base2 == (void *) -1) FATAL;
         virt_addr2 = map_base2 + (physical_address2 & MAP_MASK);
 #endif
+         */
 
         cout << "Start autonomous" << endl;
 
 
         // init start
         // TODO キャリブレーションファイル読み込み
-        // cv::FileStorage fs((std::string) params["project_folder"] + "/calibration.yml", cv::FileStorage::READ);
-        cv::FileStorage fs("/calibration.yml", cv::FileStorage::READ);
+        cv::FileStorage fs(PROJECT_DIR + "/calibration.yml", cv::FileStorage::READ);
         fs["mtx"] >> camera_mtx;
         fs["dist"] >> camera_dist;
         fs.release();
@@ -306,7 +307,7 @@ namespace autonomous {
         }
 
         cout << "json before load" << endl;
-        ifstream fin("/home/autorace.json" );
+        ifstream fin(PROJECT_DIR + "autorace.json" );
         if( !fin ){
             cout << "json load failed" << endl;
             return;
@@ -419,14 +420,14 @@ namespace autonomous {
 
         cout << "json parse end" << endl;
 
-        /* TODO IMAGE folder
-        template_right_T = cv::imread((std::string) params["project_folder"] + "/image/right_T.png", 1);
-        template_left_T = cv::imread((std::string) params["project_folder"] + "/image/left_T.png", 1);
-        template_under_T = cv::imread((std::string) params["project_folder"] + "/image/under_T.png", 1);
-        template_crosswalk = cv::imread((std::string) params["project_folder"] + "/image/crosswalk.png", 1);
-        template_right_curve = cv::imread((std::string) params["project_folder"] + "/image/right_curve.png", 1);
-        template_intersection = cv::imread((std::string) params["project_folder"] + "/image/intersection.png", 1);
-         */
+        // TODO IMAGE folder
+        template_right_T = cv::imread(PROJECT_DIR + "/image/right_T.png", 1);
+        template_left_T = cv::imread(PROJECT_DIR + "/image/left_T.png", 1);
+        template_under_T = cv::imread(PROJECT_DIR + "/image/under_T.png", 1);
+        template_crosswalk = cv::imread(PROJECT_DIR + "/image/crosswalk.png", 1);
+        template_right_curve = cv::imread(PROJECT_DIR + "/image/right_curve.png", 1);
+        template_intersection = cv::imread(PROJECT_DIR + "/image/intersection.png", 1);
+
 
         find_left_line = false;
 
