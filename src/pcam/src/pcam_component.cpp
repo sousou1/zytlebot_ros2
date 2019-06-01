@@ -195,7 +195,7 @@ namespace pcam {
 
         std::vector<uint8_t> vec = std::vector<uint8_t>(WIDTH*HEIGHT*2);
 
-        std_msgs::UInt8MultiArray::SharedPtr camdatatemp(new std_msgs::UInt8MultiArray);
+        std_msgs::msg::UInt8MultiArray::SharedPtr camdatatemp(new std_msgs::msg::UInt8MultiArray);
         camdatatemp->data = vec;
 
         camdata = camdatatemp;
