@@ -95,7 +95,7 @@ using namespace cv;
 using std::placeholders::_1;
 
 #define DEBUG true
-#define SIM true
+#define SIM false
 
 typedef struct object {
 public:
@@ -387,7 +387,9 @@ namespace autonomous
         void testOutputObject();
 
         void updateObject();
-    };
+
+        std::vector <cv::Vec4i> getHoughLinesP(cv::Mat image, int threshold, double minLineLength, double maxLineGap);
+        };
 
 } // namespace autonomous
 

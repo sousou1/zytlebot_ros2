@@ -1325,7 +1325,7 @@ namespace autonomous {
 
 
 // 確率ハフ変換によってラインを得る
-    std::vector <cv::Vec4i> getHoughLinesP(cv::Mat image, int threshold, double minLineLength, double maxLineGap) {
+    std::vector <cv::Vec4i> Autonomous::getHoughLinesP(cv::Mat image, int threshold, double minLineLength, double maxLineGap) {
         // 左側をハフ変換
         cv::Mat temp_dst, temp_color_dst;
         cv::Canny(image, temp_dst, 50, 200, 3);
