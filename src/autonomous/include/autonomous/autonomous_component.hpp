@@ -389,7 +389,7 @@ namespace autonomous
 
         void updateObject();
 
-        void Autonomous::testTurnDetect(cv::Mat aroundImage);
+        void testTurnDetect(cv::Mat aroundImage);
 
         std::vector <cv::Vec4i> getHoughLinesP(cv::Mat image, int threshold, double minLineLength, double maxLineGap);
 
