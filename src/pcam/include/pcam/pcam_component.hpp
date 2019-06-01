@@ -118,8 +118,7 @@ static int xioctl(int fd, int request, void *arg){
 
 namespace pcam
 {
-    class Pcam : public rclcpp::Node
-    {
+    class Pcam : public rclcpp::Node {
     public:
         PCAM_PUBLIC Pcam();
 
@@ -129,7 +128,9 @@ namespace pcam
         rclcpp::TimerBase::SharedPtr timer_;
 
         void setInit();
+
         void reset();
+    };
 } // namespace pcam
 
 #endif // PCAM__PCAM_COMPONENT_HPP_
