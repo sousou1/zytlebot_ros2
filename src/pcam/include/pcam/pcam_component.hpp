@@ -57,7 +57,6 @@ extern "C" {
 #include <math.h>
 #include <stdio.h>
 #include <opencv2/opencv.hpp>
-#include <geometry_msgs/msg/twist.hpp>
 #include <string>
 #include <cstdlib>
 #include <typeinfo>
@@ -86,7 +85,6 @@ extern "C" {
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <json_lib/json11.hpp>
 
 #include <linux/videodev2.h>
 
