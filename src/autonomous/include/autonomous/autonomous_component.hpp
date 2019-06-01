@@ -301,9 +301,9 @@ namespace autonomous
 
 
 #if SIM
-        rclcpp::Subscription<sensor_msgs::msg::Image::ConstSharedPtr>::SharedPtr image_sub_ ;
+        rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr image_sub_ ;
 #else
-        rclcpp::Subscription<std_msgs::msg:::UInt8MultiArrayPtr>::SharedPtr image_sub_ ;
+        rclcpp::Subscription<std_msgs::msg:::UInt8MultiArray>::SharedPtr image_sub_ ;
 #endif
         rclcpp::Subscription<std_msgs::msg::String>::SharedPtr red_pub_;
 
