@@ -106,7 +106,7 @@ namespace autonomous {
 
 #endif
         red_pub_ = this->create_subscription<std_msgs::msg::String>(
-                "/red_flag", std::bind(&Autonomous::redFlagUpdate, this, _1));
+                "/red_flag", std::bind(&Autonomous::red_flag_update, this, _1));
 
     }
 
