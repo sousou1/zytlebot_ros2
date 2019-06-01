@@ -309,7 +309,7 @@ namespace autonomous
 
         void red_flag_update(const std_msgs::msg::String::SharedPtr msg);
 #ifdef SIM
-        void image_cb(const sensor_msgs::ImageConstPtr msg);
+        void image_cb(const sensor_msgs::msg::ImageConstRawPtr msg);
 #else
         void image_cb(const std_msgs::msg::UInt8MultiArray::SharedPtr msg);
 #endif
