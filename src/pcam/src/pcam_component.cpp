@@ -9,7 +9,7 @@ namespace pcam {
 
     Pcam::Pcam()
             : Node("pcam") {
-        image_pub = create_publisher<std_msgs::msg::UInt8MultiArray>("/pcam/image_array", 1);
+        image_pub_ = create_publisher<std_msgs::msg::UInt8MultiArray>("/pcam/image_array", 1);
 
         setInit();
 
