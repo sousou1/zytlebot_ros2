@@ -13,7 +13,7 @@ namespace pcam {
 
         setInit();
 
-        timer_ = create_wall_timer(0.3s, std::bind(&Pcam::get_image, this));
+        timer_ = create_wall_timer(1s, std::bind(&Pcam::get_image, this));
     }
 
     void Pcam::get_image() {
