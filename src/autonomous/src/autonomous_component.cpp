@@ -22,9 +22,6 @@ using std::placeholders::_1;
 
 using namespace std::chrono;
 
-inline double get_time_sec(void) {
-    return static_cast<double>(duration_cast<nanoseconds>(steady_clock::now().time_since_epoch()).count()) / 1000000000;
-}
 
 
 // map_data[y][x][0]がタイルの種類
@@ -305,10 +302,10 @@ namespace autonomous {
         detected_line_x = 0;
 
         // start時間を初期化
-        phaseStartTime = rclcpp::Time::now();
-        line_lost_time = rclcpp::Time::now();
-        tileUpdatedTime = rclcpp::Time::now();
-        cycleTime = rclcpp::Time::now();
+        phaseStartTime = get_time_sec();
+        line_lost_time = get_time_sec();
+        tileUpdatedTime = get_time_sec();
+        cycleTime = get_time_sec();
 
         now_phase = "straight";
 

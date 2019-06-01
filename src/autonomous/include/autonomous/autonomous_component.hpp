@@ -45,6 +45,7 @@ extern "C" {
 
 #include <fstream>
 #include <iostream>
+#include <chrono>
 #include <image_transport/image_transport.h>
 #include <cv_bridge/cv_bridge.h>
 #include <sensor_msgs/image_encodings.hpp>
@@ -98,7 +99,7 @@ public:
     int beforeX;
     int beforeY;
     int findCnt;
-    rclcpp::Time timeStamp;
+    double timeStamp;
 } OBJECT;
 
 
@@ -109,6 +110,10 @@ typedef struct straight {
     double length;
 } STRAIGHT;
 
+inline double get_time_sec(void) {
+    return static_cast<double>(duration_cast<nanoseconds>(steady_clock::now().time_since_epoch()).count()) / 1000000000;
+}
+
 namespace autonomous
 {
 
@@ -118,7 +123,7 @@ namespace autonomous
         AUTONOMOUS_PUBLIC Autonomous();
 
     private:
-        // rclcpp::Timer led_timer;
+        // doubler led_timer;
 
         bool red_flag;
 
@@ -172,10 +177,10 @@ namespace autonomous
         // 検出された直線のx座標
         int detected_line_x;
 
-        rclcpp::Time phaseStartTime;
-        rclcpp::Time tileUpdatedTime;
-        rclcpp::Time line_lost_time;
-        rclcpp::Time cycleTime;
+        double phaseStartTime;
+        double tileUpdatedTime;
+        double line_lost_time;
+        double cycleTime;
 
         // change phaseで初期化
         // bottomにオブジェクトが到達したかどうか
