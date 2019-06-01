@@ -127,6 +127,8 @@ namespace autonomous {
 #endif
 
 #ifdef SIM
+        cv::imshow("raw", msg);
+
         cv_bridge::CvImagePtr cv_ptr;
         try {
             // ROSからOpenCVの形式にtoCvCopy()で変換。cv_ptr->imageがcv::Matフォーマット。
@@ -147,7 +149,6 @@ namespace autonomous {
         cv::Mat caliblated;
         cv::remap(dstimg, caliblated, MapX, MapY, cv::INTER_LINEAR);
 #endif
-        cout << "doing" << endl;
     }
 
     void Autonomous::set_param(){
@@ -249,7 +250,7 @@ namespace autonomous {
         RIGHT_CURVE_UNDER_MARGIN = autorace["right_curve_under_margin"].number_value();
         INTERSECTION_PREDICTION_UNDER_MARGIN = autorace["intersection_prediction_under_margin"].number_value();
         RUN_LINE = autorace["run_line"].number_value();
-        RUN_LINE_MARGIN = autorace["run_line_margin"].number_value();
+        RUN_LINE_MARGIN = autorace["run_line_margin"].number_value();d
         WIDTH_RATIO = autorace["width_ratio"].number_value();
         HEIGHT_H = autorace["height_h"].number_value();;
         HEIGHT_L = autorace["height_l"].number_value();;
