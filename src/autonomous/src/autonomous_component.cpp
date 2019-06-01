@@ -121,13 +121,12 @@ namespace autonomous {
         cout << msg->data << endl;
         cout << red_flag << endl;
     }
-/*
+
 #ifdef SIM
     void Autonomous::image_cb(const sensor_msgs::msg::Image::ConstSharedPtr msg){
 #else
- */
     void Autonomous::image_cb(const std_msgs::msg::UInt8MultiArray::SharedPtr msg){
-//#endif
+#endif
 
 #ifdef SIM
         cv_bridge::CvImagePtr cv_ptr;
