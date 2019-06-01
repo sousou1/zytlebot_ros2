@@ -885,7 +885,7 @@ namespace autonomous {
         // タイルと入射角の差　どの方角からタイルに侵入するかを判別
         int differenceDirection = (tileRot - now_dir + 4) % 4;
 
-        std_msgs::msg::String how_signal_search;
+        auto how_signal_search = std::make_shared<std_msgs::msg::String>();
         how_signal_search.data = "-1";
 
         if (tileType == 6) {
@@ -1387,7 +1387,9 @@ namespace autonomous {
 #endif
         before_twist_x = twist.linear.x;
 
-        twist_pub.publish(twist);
+        auto pub_twist = std::make_shared<geometry_msgs::msg::Twist>();
+        pub_twist->data = twist;
+        twist_pub.publish(pub_twist);
     }
 
 // ラインが見つからないときに首を振ることで直線を探す
