@@ -111,7 +111,7 @@ namespace autonomous {
 */
     }
 
-    void Autonomous::red_flag_update(const std_msgs::msg::String::SharedPtr msg) {
+    void Autonomous::red_flag_update(const std_msgs::msg::String::SharedPtr &msg) {
         if (msg->data == "true") {
             red_flag = true;
         } else {
@@ -122,9 +122,9 @@ namespace autonomous {
         cout << red_flag << endl;
     }
 #ifdef SIM
-    void Autonomous::image_cb(const sensor_msgs::msg::Image::ConstRawPtr msg){
+    void Autonomous::image_cb(const sensor_msgs::msg::Image::ConstRawPtr &msg){
 #else
-    void Autonomous::image_cb(const std_msgs::msg::UInt8MultiArray::SharedPtr msg){
+    void Autonomous::image_cb(const std_msgs::msg::UInt8MultiArray::SharedPtr &msg){
 #endif
 
 #ifdef SIM
