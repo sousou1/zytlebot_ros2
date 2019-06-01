@@ -123,6 +123,24 @@ namespace pcam
         PCAM_PUBLIC Pcam();
 
     private:
+        unsigned char *buffer;
+        int fd;
+        struct v4l2_capability caps;
+
+        int num_planes;
+        struct v4l2_requestbuffers reqbuf;
+        int MAX_BUF_COUNT;
+
+        XmlRpc::XmlRpcValue params;
+        int pcam_frame;
+
+        std_msgs::msg::UInt8MultiArrayPtr camdata;
+        struct v4l2_buffer buf;
+
+        struct v4l2_plane planes[FMT_NUM_PLANES];
+
+        bool CbFlag;
+
         rclcpp::Publisher<std_msgs::msg::UInt8MultiArray>::SharedPtr image_pub_;
 
         rclcpp::TimerBase::SharedPtr timer_;
@@ -130,7 +148,9 @@ namespace pcam
         void setInit();
 
         void reset();
-    };
+
+        void get_image() {
+        };
 } // namespace pcam
 
 #endif // PCAM__PCAM_COMPONENT_HPP_
