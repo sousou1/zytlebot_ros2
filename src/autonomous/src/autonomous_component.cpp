@@ -95,11 +95,10 @@ namespace autonomous {
         // パラメータセット
         set_param();
 
-        /*
-#if DEBUG
+#if SIM
 
-        image_sub_ = this->create_subscription<std_msgs::msg::UInt8MultiArray>(
-    "/image_array", std::bind(&Autonomous::image_cb, this, _1));
+        image_sub_ = this->create_subscription<sensor_msgs::msg::Image::ConstSharedPtr>(
+    "/camera/image_raw", std::bind(&Autonomous::image_cb, this, _1));
 
 #else
         image_sub_ = this->create_subscription<std_msgs::msg:::UInt8MultiArrayPtr>(
@@ -108,7 +107,7 @@ namespace autonomous {
 #endif
         red_pub_ = this->create_subscription<std_msgs::msg::String>(
                 "/red_flag", std::bind(&Autonomous::redFlagUpdate, this, _1));
-*/
+
     }
 
     void Autonomous::red_flag_update(const std_msgs::msg::String::SharedPtr msg) {
