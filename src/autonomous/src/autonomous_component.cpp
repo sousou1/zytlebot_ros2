@@ -122,7 +122,7 @@ namespace autonomous {
         cout << red_flag << endl;
     }
 #ifdef SIM
-    void Autonomous::image_cb(const sensor_msgs::msg::Image::ConstPtr msg){
+    void Autonomous::image_cb(const sensor_msgs::msg::Image::ConstRawPtr msg){
 #else
     void Autonomous::image_cb(const std_msgs::msg::UInt8MultiArray::SharedPtr msg){
 #endif
@@ -364,7 +364,8 @@ namespace autonomous {
         twist.angular.z = 0.0;
         //limitedTwistPub();
 
-        setSearchType();
+
+        // TODO valid setSearchType();
 
         // param set end
         cout << "Hue_h" << Hue_h << endl;
