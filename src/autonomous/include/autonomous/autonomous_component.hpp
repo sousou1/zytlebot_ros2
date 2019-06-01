@@ -120,8 +120,6 @@ inline double get_time_sec(void) {
     return static_cast<double>(duration_cast<nanoseconds>(steady_clock::now().time_since_epoch()).count()) / 1000000000;
 }
 
-#define PROJECT_DIR "/home/sou/zytlebot_ros2/src/autonomous"
-
 namespace autonomous
 {
 
@@ -135,6 +133,7 @@ namespace autonomous
 
         bool red_flag;
 
+        std::string PROJECT_DIR="/home/sou/zytlebot_ros2/src/autonomous";
         // 定数宣言
         int BIRDSEYE_LENGTH, CAMERA_WIDTH, CAMERA_HEIGHT;
 
