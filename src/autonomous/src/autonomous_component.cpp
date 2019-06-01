@@ -175,7 +175,7 @@ namespace autonomous {
         mileage = twist.linear.x * (double)(get_time_sec() - cycleTime) * INTERSECTION_PREDICTION_TIME_RATIO;
         phaseRunMileage += mileage;
 
-        double processingStartTime = double::now();
+        double processingStartTime = get_time_sec();
 
         cv::Mat road_clone = road_white_binary.clone();
 
@@ -214,7 +214,7 @@ namespace autonomous {
 
         if (!findFigureFlag) {
             if (now_phase == "straight") {
-                double now = double::now();
+                double now = get_time_sec();
                 if (now - line_lost_time > 0.5 && map_data[next_tile_y][next_tile_x][0] == 8) {
                     changePhase("intersection_straight");
                 } else {
@@ -255,7 +255,7 @@ namespace autonomous {
                 crosswalkRedStop();
             }
         } else {
-            searchFigure(birds_eye);
+            // searchFigure(birds_eye);
         }
 
         // ---------------controller end----------------
@@ -885,7 +885,7 @@ namespace autonomous {
         // タイルと入射角の差　どの方角からタイルに侵入するかを判別
         int differenceDirection = (tileRot - now_dir + 4) % 4;
 
-        std_msgs::String how_signal_search;
+        std_msgs::msg::String how_signal_search;
         how_signal_search.data = "-1";
 
         if (tileType == 6) {

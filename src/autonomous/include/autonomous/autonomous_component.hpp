@@ -390,7 +390,8 @@ namespace autonomous
         void updateObject();
 
         std::vector <cv::Vec4i> getHoughLinesP(cv::Mat image, int threshold, double minLineLength, double maxLineGap);
-        };
+
+    };
 
 } // namespace autonomous
 
