@@ -121,7 +121,7 @@ namespace autonomous {
         cout << red_flag << endl;
     }
 #ifdef SIM
-    void Autonomous::image_cb(const sensor_msgs::msg::Image::ConstSharedPtr msg){
+    void Autonomous::image_cb(const sensor_msgs::msg::Image::SharedPtr msg){
 #else
     void Autonomous::image_cb(const std_msgs::msg::UInt8MultiArray::SharedPtr msg){
 #endif
@@ -249,7 +249,7 @@ namespace autonomous {
         RIGHT_CURVE_UNDER_MARGIN = autorace["right_curve_under_margin"].number_value();
         INTERSECTION_PREDICTION_UNDER_MARGIN = autorace["intersection_prediction_under_margin"].number_value();
         RUN_LINE = autorace["run_line"].number_value();
-        RUN_LINE_MARGIN = autorace["run_line_margin"].number_value();d
+        RUN_LINE_MARGIN = autorace["run_line_margin"].number_value();
         WIDTH_RATIO = autorace["width_ratio"].number_value();
         HEIGHT_H = autorace["height_h"].number_value();;
         HEIGHT_L = autorace["height_l"].number_value();;
