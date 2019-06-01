@@ -127,8 +127,6 @@ namespace autonomous {
 #endif
 
 #ifdef SIM
-        cv::imshow("raw", msg);
-
         cv_bridge::CvImagePtr cv_ptr;
         try {
             // ROSからOpenCVの形式にtoCvCopy()で変換。cv_ptr->imageがcv::Matフォーマット。
@@ -140,6 +138,9 @@ namespace autonomous {
         }
         cv::Mat caliblated = cv_ptr->image;
         cv::imshow("image", caliblated);
+
+        cv::imshow("raw", cv_ptr);
+
 #else
         cv::Mat base_image(CAMERA_HEIGHT, CAMERA_WIDTH, CV_8UC2);
         cv::Mat dstimg(CAMERA_HEIGHT, CAMERA_WIDTH, CV_8UC2);
