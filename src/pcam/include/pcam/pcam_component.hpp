@@ -80,6 +80,7 @@ extern "C" {
 #include <termios.h>
 #include <sys/types.h>
 #include <sys/mman.h>
+#include <sys/ioctl.h>
 
 // JSON読み込み
 #include <iostream>
@@ -127,8 +128,8 @@ namespace pcam
 
         rclcpp::TimerBase::SharedPtr timer_;
 
-        void Pcam::setInit();
-        void Pcam::reset();
+        void setInit();
+        void reset();
 } // namespace pcam
 
 #endif // PCAM__PCAM_COMPONENT_HPP_
