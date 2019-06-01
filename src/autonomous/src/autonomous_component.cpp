@@ -1728,7 +1728,7 @@ namespace autonomous {
             findFigureFlag = true;
         }
     }
-*/
+
 
 // 重いから却下になりそう
     void detectSkin(const cv::Mat& image){
@@ -1755,9 +1755,9 @@ namespace autonomous {
             cv::moveWindow("bgs output", 1200, 20);
         }
     }
+*/
 
-
-
+/*
     void skinSegments(const Mat& img, Mat& mask, Mat& dst)
     {
         int niters = 2;
@@ -1794,10 +1794,10 @@ namespace autonomous {
             drawContours(dst, contours, largestComp, color, FILLED, LINE_8, hierarchy);
         }
 
-        /*
+
      * TODO 人形を判別した長方形範囲rectの左辺rect.xが推定路線より右かつ、底辺rect.y+rect.heightが一定値以上なら止まるようにフラグを立てる
      * ただし、次が横断歩道かつ横断歩道フラグがonかつ、青信号が検知されていない時は、左辺rect.xがdetected_xより左でも、底辺rect.y+rect.heightが一定値以下なら止まる
-    */
+
         if (maxArea > 1000 && figureRect.x > BIRDSEYE_LENGTH * (1 + RUN_LINE) && figureRect.y + figureRect.height > BIRDSEYE_LENGTH * 0.6) {
             findFigureFlag = true;
         } else {
@@ -1807,7 +1807,7 @@ namespace autonomous {
         //imshow("temp", temp);
         // cv::moveWindow("temp", 1200, 20);
     }
-
+*/
 
 /*
  * 交差点をテンプレートマッチングで検索する

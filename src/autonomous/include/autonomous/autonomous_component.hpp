@@ -317,6 +317,76 @@ namespace autonomous
         void image_cb(const std_msgs::msg::UInt8MultiArray::SharedPtr msg);
 #endif
         void set_param();
+
+        void changePhase(std::string next_phase);
+
+        void resetFlag();
+
+        double detectLane(cv::Mat left_roi);
+
+        void searchObject();
+
+        void skipNextSearch();
+
+        void setNextTile();
+
+        void setSearchType();
+
+        void crosswalkRedStop();
+
+        double intersectionStraight(cv::Mat roadRoi);
+
+        void leftTurn();
+
+        void leftTurnDetect(cv::Mat aroundImage);
+
+        void determinationRightTurn();
+
+        void rightTurnDetect(cv::Mat image);
+
+        void  obstacleAvoidance(cv::Mat road_white_binary, cv::Mat aroundWhiteBinary);
+
+        void rightCurveTrace(cv::Mat road_binary);
+
+        void updateLeftLine(cv::Mat road_binary);
+
+        void lineTrace(float degree_average, cv::Mat road_white_binary);
+
+        void limitedTwistPub();
+
+        void searchLine();
+
+        void stopForFigure();
+
+        void searchRightLaneRightT(bool nowFindRightLaneRightT);
+
+        cv::Mat birdsEye(cv::Mat image);
+
+        cv::Mat birdsEyeAround(cv::Mat image);
+
+        STRAIGHT toStraightStruct(cv::Vec4i line);
+
+        double lineWeight(cv::Vec4i line);
+
+        cv::Mat whiteBinary(cv::Mat image);
+
+        int crossCheck(cv::Vec4i horiLine, cv::Vec4i verLine);
+
+        void deleteObject(std::string objType);
+
+        void addMostDistantObject(std::string objType, int objectX, int objectY);
+
+        void addObject(std::string objType, int objectX, int objectY);
+
+        void searchRedObs(const cv::Mat& birds_eye);
+
+        void intersectionDetectionByTemplateMatching(cv::Mat aroundWhiteBinary, double template_angle);
+
+        void testTemplateMatching(cv::Mat aroundWhiteBinary, cv::Mat template_img, cv::Scalar color);
+
+        void testOutputObject();
+
+        void updateObject();
     };
 
 } // namespace autonomous
