@@ -13,6 +13,7 @@ namespace pcam {
 
         setInit();
 
+        // TODO 時間設定
         timer_ = create_wall_timer(1s, std::bind(&Pcam::get_image, this));
     }
 
