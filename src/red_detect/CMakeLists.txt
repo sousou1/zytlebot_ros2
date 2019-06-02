@@ -6,11 +6,11 @@ if(NOT CMAKE_CXX_STANDARD)
     set(CMAKE_CXX_STANDARD 14)
 endif()
 
-set(CMAKE_CXX_FLAGS "-std=c++11 -lm -g -fsigned-char -fpermissive -Wint-to-pointer-cast -O3")
+set(CMAKE_CXX_FLAGS "-lm -g -fsigned-char -fpermissive -Wint-to-pointer-cast -O3")
 
-#if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-#    add_compile_options(-lm -g -fsigned-char -fpermissive -Wint-to-pointer-cast -O3)
-#endif()
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    # add_compile_options(-lm -g -fsigned-char -fpermissive -Wint-to-pointer-cast -O3)
+endif()
 
 
 ## Find catkin macros and libraries
