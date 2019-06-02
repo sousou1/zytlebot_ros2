@@ -29,7 +29,10 @@ find_package(OpenCV REQUIRED)
 find_package(class_loader REQUIRED)
 
 include_directories(include)
+
+# コンポーネントノードの共有ライブラリをコンパイルする
 add_library(autonomous_component SHARED src/autonomous_component.cpp include/json_lib/json11.cpp)
+# コンポーネントノードのヘッダーファイルのマクロを設定する
 target_compile_definitions(autonomous_component PRIVATE "AUTONOMOUS_BUILDING_DLL")
 ament_target_dependencies(autonomous_component
         sensor_msgs
@@ -40,8 +43,9 @@ ament_target_dependencies(autonomous_component
         image_transport
         geometry_msgs
         )
+# コンポーネントノードをamentのリソースインデクスに登録する
+rclcpp_register_node_plugins(autonomous_component "autonomous::Autonomous")
 
-rclcpp_register_node_plugins(autonomous_component "autonomous::autonomous")
 
 include_directories(
         ${sensor_msgs_INCLUDE_DIRS}
@@ -58,11 +62,12 @@ include_directories(
 # add_library(autorace src/autorace.cpp include/signal_lib/xcalc_hog.c include/signal_lib/xcalc_hog_linux.c  include/signal_lib/xcalc_hog_sinit.c include/signal_lib/linuxmisc.cpp include/signal_lib/linuxmmap.cpp include/json_lib/json11.cpp)
 #add_definitions(-std=c++11)
 
-# Build a standalone version of the node
-
+# スタンドアローンノードの実行ファイルをコンパイルする
 add_executable(autonomous src/autonomous.cpp)
+# 共有ライブラリに実行ファイルをリンクする
 target_link_libraries(autonomous autonomous_component)
 
+# 実行ファイルのコンパイルターゲットに依存パッケージの情報を追加する
 ament_target_dependencies(autonomous
         sensor_msgs
         cv_bridge
@@ -72,7 +77,26 @@ ament_target_dependencies(autonomous
         image_transport
         geometry_msgs
         )
-ament_export_include_directories(include)
+
+# 本パッケージが利用するパッケージの情報を他のパッケージにエクスポートする
+ament_export_dependencies(ament_cmake)
+ament_export_dependencies(rclcpp)
+ament_export_dependencies(class_loader)
+ament_export_dependencies(std_msgs)
+ament_export_dependencies(sensor_msgs)
+ament_export_dependencies(cv_bridge)
+ament_export_dependencies(image_transport)
+ament_export_dependencies(geometry_msgs)
+
+ament_export_include_directories(${sensor_msgs_INCLUDE_DIRS}
+        ${cv_bridge_INCLUDE_DIRS}
+        ${rclcpp_INCLUDE_DIRS}
+        ${std_msgs_INCLUDE_DIRS}
+        ${image_transport_INCLUDE_DIRS}
+        ${geometry_msgs_INCLUDE_DIRS}
+        ${OpenCV_INCLUDE_DIRS}
+        include
+        )
 
 ament_export_libraries(autonomous_component)
 
