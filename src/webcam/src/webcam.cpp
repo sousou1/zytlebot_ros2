@@ -19,6 +19,6 @@
 
 int main(int argc, char *argv[]) {
     rclcpp::init(argc, argv);
-    rclcpp::spin(std::make_shared<webcam::Pcam>());
+    rclcpp::spin(std::make_shared<webcam::Webcam>());
     rclcpp::shutdown();
 }
