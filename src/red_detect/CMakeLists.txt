@@ -55,7 +55,7 @@ include_directories(
 
 # Build a standalone version of the node
 
-add_executable(red_detect src/red_detect.cpp include/signal_lib/xcalc_hog.c include/signal_lib/xcalc_hog_linux.c  include/signal_lib/xcalc_hog_sinit.c include/signal_lib/linuxmisc.cpp include/signal_lib/linuxmmap.cpp)
+add_executable(red_detect src/red_detect.cpp include/json_lib/json11.cpp include/signal_lib/xcalc_hog.c include/signal_lib/xcalc_hog_linux.c  include/signal_lib/xcalc_hog_sinit.c include/signal_lib/linuxmisc.cpp include/signal_lib/linuxmmap.cpp)
 target_link_libraries(red_detect red_detect_component)
 
 ament_target_dependencies(red_detect
