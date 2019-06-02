@@ -106,6 +106,22 @@ namespace webcam
         WEBCAM_PUBLIC Webcam();
 
     private:
+        struct buffer_addr_struct{
+            void *start[FMT_NUM_PLANES];
+            size_t length[FMT_NUM_PLANES];
+        } *buffers;
+
+        static int xioctl(int fd, int request, void *arg){
+            int r;
+            do {
+                r = ioctl (fd, request, arg);
+                if (request == VIDIOC_DQBUF) {
+                    std::cout << "r : " << r << std::endl;
+                }
+            } while (-1 == r && EINTR == errno);
+            return r;
+        }
+
         unsigned char *buffers[REQUEST_BUFFER_NUM];
 
         int fd;
@@ -114,7 +130,7 @@ namespace webcam
         int usbcam_frame;
         std::chrono::system_clock::time_point  t1, t2, t3, t4, t5, t6, t7;
 
-        std_msgs::UInt8MultiArray::SharedPtr camdata;
+        std_msgs::msg::UInt8MultiArray::SharedPtr camdata;
         struct 	v4l2_buffer buf;
 
 

@@ -85,7 +85,7 @@ namespace webcam {
         close(fd);
 
         cout << "restart  USB!!! " << endl;
-        setInit();
+        set_Init();
     }
 
     void Webcam::set_Init() {
@@ -197,7 +197,7 @@ namespace webcam {
 
         std::vector<uint8_t> vec = std::vector<uint8_t>(WIDTH*HEIGHT*2);
 
-        std_msgs::msg::UInt8MultiArray::SharedPtr camdatatemp(new std_msgs::UInt8MultiArray);
+        std_msgs::msg::UInt8MultiArray::SharedPtr camdatatemp(new std_msgs::msg::UInt8MultiArray);
         camdatatemp->data = vec;
 
         camdata = camdatatemp;
