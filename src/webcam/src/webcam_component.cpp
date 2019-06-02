@@ -68,7 +68,7 @@ namespace webcam {
         t2 = std::chrono::system_clock::now();
     }
 
-    void reset() {
+    void Webcam::reset() {
         buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
         buf.memory = V4L2_MEMORY_MMAP;
         if (-1 == xioctl(fd, VIDIOC_STREAMOFF, &buf.type)) {
@@ -88,7 +88,7 @@ namespace webcam {
         setInit();
     }
 
-    void set_Init() {
+    void Webcam::set_Init() {
         CbFlag = false;
         fd = open("/dev/video1", O_RDWR, 0);
         if (fd == -1)

@@ -95,26 +95,9 @@ using namespace cv;
 
 using std::placeholders::_1;
 
-#define FMT_NUM_PLANES 3
+#define REQUEST_BUFFER_NUM 10
 #define WIDTH 640
 #define HEIGHT 480
-
-
-struct buffer_addr_struct{
-    void *start[FMT_NUM_PLANES];
-    size_t length[FMT_NUM_PLANES];
-} *buffers;
-
-static int xioctl(int fd, int request, void *arg){
-    int r;
-    do {
-        r = ioctl (fd, request, arg);
-        if (request == VIDIOC_DQBUF) {
-            std::cout << "r : " << r << std::endl;
-        }
-    } while (-1 == r && EINTR == errno);
-    return r;
-}
 
 namespace webcam
 {
@@ -141,7 +124,7 @@ namespace webcam
 
         rclcpp::TimerBase::SharedPtr timer_;
 
-        void setInit();
+        void set_Init();
 
         void reset();
 
