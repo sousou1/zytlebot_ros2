@@ -100,21 +100,7 @@ using std::placeholders::_1;
 #define HEIGHT 480
 
 
-struct buffer_addr_struct{
-    void *start[FMT_NUM_PLANES];
-    size_t length[FMT_NUM_PLANES];
-} *buffers;
 
-static int xioctl(int fd, int request, void *arg){
-    int r;
-    do {
-        r = ioctl (fd, request, arg);
-        if (request == VIDIOC_DQBUF) {
-            std::cout << "r : " << r << std::endl;
-        }
-    } while (-1 == r && EINTR == errno);
-    return r;
-}
 
 namespace pcam
 {
@@ -123,6 +109,22 @@ namespace pcam
         PCAM_PUBLIC Pcam();
 
     private:
+        struct buffer_addr_struct{
+            void *start[FMT_NUM_PLANES];
+            size_t length[FMT_NUM_PLANES];
+        } *buffers;
+
+        static int xioctl(int fd, int request, void *arg){
+            int r;
+            do {
+                r = ioctl (fd, request, arg);
+                if (request == VIDIOC_DQBUF) {
+                    std::cout << "r : " << r << std::endl;
+                }
+            } while (-1 == r && EINTR == errno);
+            return r;
+        }
+
         unsigned char *buffer;
         int fd;
         struct v4l2_capability caps;
