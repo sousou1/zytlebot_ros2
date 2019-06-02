@@ -106,11 +106,6 @@ namespace webcam
         WEBCAM_PUBLIC Webcam();
 
     private:
-        struct buffer_addr_struct{
-            void *start[FMT_NUM_PLANES];
-            size_t length[FMT_NUM_PLANES];
-        } *buffers;
-
         static int xioctl(int fd, int request, void *arg){
             int r;
             do {

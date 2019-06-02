@@ -53,7 +53,7 @@ namespace webcam {
                 }
 
                 memcpy(&(camdata->data[0]), buffers[buf.index], 640 * 480 * 2);
-                pub.publish(camdata);
+                image_pub_->publish(camdata);
 
                 // Connect buffer to queue for next capture.
                 if (-1 == xioctl(fd, VIDIOC_QBUF, &buf)) {
