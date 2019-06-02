@@ -15,19 +15,16 @@ namespace red_detect {
         cout << "signal start" << endl;
 
 
-        nh_ = getNodeHandle();
-        nh_.getParam("/nodelet_autorace/autorace", ros_params);
-
         check_window();
         check_window2("/home/fpga/zytlebot_ros2/src/autonomous");
 
 
         // TODO subscribe先はtopicに応じて変更
         image_sub_ = this->create_subscription<std_msgs::msg::UInt8MultiArray>(
-                "/webcam/image_array", std::bind(&Autonomous::image_cb, this, _1));
+                "/webcam/image_array", std::bind(&RedDetect::image_cb, this, _1));
 
         signal_search_ = this->create_subscription<std_msgs::msg::String>(
-            "/signal_search_type", std::bind(&Signal::signalSearchCb, this, _1));
+            "/signal_search_type", std::bind(&RedDetect::signalSearchCb, this, _1));
 
         red_pub_ = create_publisher<std_msgs::msg::String>("/red_flag", 1);
 
@@ -38,7 +35,7 @@ namespace red_detect {
         find_count = 0;
     }
 
-    void check_window(){
+    void RedDetect::check_window(){
         for(int i = 0; i < window_num; i++){
             int sy = w[i][0][0];
             int sx = w[i][1][0];
@@ -68,7 +65,7 @@ namespace red_detect {
         }
     }
 
-    void check_window2(std::string project_folder){
+    void RedDetect::check_window2(std::string project_folder){
 
         ifstream fin(project_folder + "/signal.json" );
         if( !fin ){
@@ -117,7 +114,7 @@ namespace red_detect {
             }
         }
     }
-    void signalSearchCb(const std_msgs::msg::String::SharedPtr msg) {
+    void RedDetect::signalSearchCb(const std_msgs::msg::String::SharedPtr msg) {
         if (msg->data == "-1") {
             how_search = -1;
         } else if (msg->data == "0") {
@@ -127,7 +124,7 @@ namespace red_detect {
         }
     }
 
-    void image_cb(const std_msgs::msg::UInt8MultiArray::SharedPtr msg) {
+    void RedDetect::image_cb(const std_msgs::msg::UInt8MultiArray::SharedPtr msg) {
 
         cout << "search signal Type = " << how_search << "!!!!!!" << endl;
 
@@ -216,7 +213,7 @@ namespace red_detect {
 
         red_pub_->publish(send_msg);
     }
-    bool hwresultcheck(unsigned short* sw_feature, unsigned short* hw_feature, int start, int end){
+    bool RedDetect::hwresultcheck(unsigned short* sw_feature, unsigned short* hw_feature, int start, int end){
         bool showmode = true;
         bool flg = true;
         for(int i = start; i < end; i++){
@@ -228,7 +225,7 @@ namespace red_detect {
         if(!flg) cout << "hwresult check NG" << endl;
         return flg;
     }
-    void test_four_window(float* result, int num, Mat rgb[4], Mat hls[4], Mat gray[4], double* time0, double* time1, double* time2, double *time3){
+    void RedDetect::test_four_window(float* result, int num, Mat rgb[4], Mat hls[4], Mat gray[4], double* time0, double* time1, double* time2, double *time3){
         std::chrono::system_clock::time_point  t0, t1, t2, t3, t4, t5, t6, t7;
         cv::Size spatial_size(8, 8);
         Mat spatial_rgb[4], spatial_hls[4];
@@ -276,7 +273,7 @@ namespace red_detect {
         t5 = std::chrono::system_clock::now();
         *time3 += (long double)std::chrono::duration_cast<std::chrono::microseconds>(t5-t4).count()/1000;
     }
-    vector<pair<vector<int>, float>> test_one_frame(Mat frame, int mode){
+    vector<pair<vector<int>, float>> RedDetect::test_one_frame(Mat frame, int mode){
         vector<pair<vector<int>, float>> rst;
         std::chrono::system_clock::time_point  t1, t2, t3, t4, t5, t6, t7;
 
