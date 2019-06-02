@@ -92,6 +92,8 @@ extern "C" {
 #include "signal_lib/window_candidate.h"
 #include "signal_lib/hw.h"
 
+#include <json_lib/json11.hpp>
+
 using namespace std::chrono;
 using namespace std;
 using namespace cv;
