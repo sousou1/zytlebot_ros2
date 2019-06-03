@@ -132,8 +132,8 @@ namespace pcam {
         buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
 
         std::cout << v4l2_fd << std::endl;
-        std::cout << w << std::endl;
-        std::cout << h << std::endl;
+        std::cout << V4L2_MEMORY_MMAP << std::endl;
+        std::cout << V4L2_BUF_TYPE_VIDEO_CAPTURE << std::endl;
 
 
         FD_ZERO(&fds);
@@ -141,7 +141,7 @@ namespace pcam {
         tv.tv_sec = 2;
         tv.tv_usec = 0;
         select(v4l2_fd + 1, &fds, NULL, NULL, &tv);
-        if (FD_ISSET(v4l2_fd, &fds)) {
+        if (1) {
             rc = xioctl(v4l2_fd, VIDIOC_DQBUF, &buf);
             if (rc < 0) {
                 fprintf(stderr, "VIDIOC_DQBUF: errno = %d\n", errno);
