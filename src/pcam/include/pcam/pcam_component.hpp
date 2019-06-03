@@ -86,14 +86,9 @@ namespace pcam
         int v4l2_fd;
         void *v4l2_user_frame[NUM_BUFFER];
         int rc;
-        int w = WIDTH, h = HEIGHT;
+        int w = WIDTH;
+        int h = HEIGHT;
         unsigned char *buf;
-        static int xioctl(int fd, int request, void *arg){
-                int rc;
-                do rc = ioctl(fd, request, arg);
-                while (-1 == rc && EINTR == errno);
-                return rc;
-        }
 
         void get_image();
         int v4l2init(int w, int h, __u32 pixelformat);
@@ -101,7 +96,7 @@ namespace pcam
         int v4l2grab(unsigned char **frame);
         int v4l2release(int buf_idx);
         std::string mat_type2encoding(int mat_type);
-
+        int xioctl(int fd, int request, void *arg);
         void convert_frame_to_message(
                 const cv::Mat & frame, size_t frame_id, sensor_msgs::msg::Image::SharedPtr msg);
 
