@@ -387,6 +387,9 @@ namespace autonomous
 
         std::vector <cv::Vec4i> getHoughLinesP(cv::Mat image, int threshold, double minLineLength, double maxLineGap);
 
+        int encoding2mat_type(const std::string & encoding);
+
+
     };
 
 } // namespace autonomous

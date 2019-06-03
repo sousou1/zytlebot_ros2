@@ -1959,6 +1959,26 @@ namespace autonomous {
             objCnt++;
         }
     }
+    int Autonomous::encoding2mat_type(const std::string & encoding)
+    {
+        if (encoding == "mono8") {
+            return CV_8UC1;
+        } else if (encoding == "bgr8") {
+            return CV_8UC3;
+        } else if (encoding == "mono16") {
+            return CV_16SC1;
+        } else if (encoding == "rgba8") {
+            return CV_8UC4;
+        } else if (encoding == "bgra8") {
+            return CV_8UC4;
+        } else if (encoding == "32FC1") {
+            return CV_32FC1;
+        } else if (encoding == "rgb8") {
+            return CV_8UC3;
+        } else {
+            throw std::runtime_error("Unsupported encoding type");
+        }
+    }
 
 } // namespace autorace
 
