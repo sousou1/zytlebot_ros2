@@ -47,6 +47,8 @@ namespace pcam {
             return -1;
         }
 
+        std::cout << v4l2_fd << std::endl;
+
         memset(&fmt, 0, sizeof(fmt));
         fmt.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
         fmt.fmt.pix.width = w;
@@ -120,14 +122,16 @@ namespace pcam {
 
     int Pcam::v4l2grab(unsigned char **frame)
     {
-        int rd;
-        struct v4l2_buffer buf2;
+        int rc;
+        struct v4l2_buffer buf;
         fd_set fds;
         struct timeval tv;
 
-        memset(&buf2, 0, sizeof(buf2));
-        buf2.memory = V4L2_MEMORY_MMAP;
-        buf2.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+        memset(&buf, 0, sizeof(buf));
+        buf.memory = V4L2_MEMORY_MMAP;
+        buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+
+        std::cout << v4l2_fd << std::endl;
 
         FD_ZERO(&fds);
         FD_SET(v4l2_fd, &fds);
@@ -135,16 +139,16 @@ namespace pcam {
         tv.tv_usec = 0;
         select(v4l2_fd + 1, &fds, NULL, NULL, &tv);
         if (FD_ISSET(v4l2_fd, &fds)) {
-            rd = xioctl(v4l2_fd, VIDIOC_DQBUF, &buf2);
-            if (rd < 0) {
+            rc = xioctl(v4l2_fd, VIDIOC_DQBUF, &buf);
+            if (rc < 0) {
                 fprintf(stderr, "VIDIOC_DQBUF: errno = %d\n", errno);
                 return -1;
             }
-            if (buf2.index < NUM_BUFFER) {
-                *frame = (unsigned char *)v4l2_user_frame[buf2.index];
-                return buf2.index;
+            if (buf.index < NUM_BUFFER) {
+                *frame = (unsigned char *)v4l2_user_frame[buf.index];
+                return buf.index;
             } else {
-                fprintf(stderr, "VIDIOC_DQBUF: buf2.index = %d\n", errno);
+                fprintf(stderr, "VIDIOC_DQBUF: buf.index = %d\n", errno);
                 return -1;
             }
         } else {
