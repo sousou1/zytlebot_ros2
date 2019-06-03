@@ -89,7 +89,6 @@ namespace pcam
         int rc;
         int w = WIDTH, h = HEIGHT;
         unsigned char *buf;
-        cv::Mat frame(h, w, CV_8UC3);
 
         static int xioctl(int fd, int request, void *arg){
                 int rc;

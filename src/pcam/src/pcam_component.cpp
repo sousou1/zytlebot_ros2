@@ -22,6 +22,7 @@ namespace pcam {
     }
 
     void Pcam::get_image() {
+        cv::Mat frame(h, w, CV_8UC3);
         auto msg = std::make_shared<sensor_msgs::msg::Image>();
         rc = v4l2grab(&buf);
         if (rc < 0) {
