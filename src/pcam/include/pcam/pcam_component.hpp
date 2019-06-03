@@ -41,25 +41,9 @@ extern "C" {
 #endif
 
 #include <rclcpp/rclcpp.hpp>
-#include <std_msgs/msg/string.hpp>
-
-#include <fstream>
-#include <iostream>
-#include <chrono>
-#include <image_transport/image_transport.h>
 #include <cv_bridge/cv_bridge.h>
 #include <sensor_msgs/image_encodings.hpp>
-#include <opencv2/videoio/videoio.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/video/background_segm.hpp>
-#include "unistd.h"
-#include <math.h>
-#include <stdio.h>
-#include <opencv2/opencv.hpp>
-#include <string>
-#include <cstdlib>
-#include <typeinfo>
+
 
 // #include <boost/thread.hpp>
 
@@ -69,25 +53,20 @@ extern "C" {
 #include "std_msgs/msg/u_int8_multi_array.hpp"
 #include "std_msgs/msg/string.hpp"
 
-// devmem
-#include <stdlib.h>
+#include <stdio.h>
 #include <unistd.h>
-#include <string.h>
-#include <errno.h>
-#include <signal.h>
-#include <fcntl.h>
-#include <ctype.h>
-#include <termios.h>
 #include <sys/types.h>
-#include <sys/mman.h>
+#include <sys/stat.h>
 #include <sys/ioctl.h>
-
-// JSON読み込み
+#include <sys/mman.h>
+#include <fcntl.h>
+#include <string.h>
 #include <iostream>
-#include <fstream>
-#include <sstream>
-
 #include <linux/videodev2.h>
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include "pcam_lib/cam.h"
 
 using namespace std::chrono;
 using namespace std;
@@ -95,11 +74,10 @@ using namespace cv;
 
 using std::placeholders::_1;
 
-#define FMT_NUM_PLANES 3
-#define WIDTH 640
+#define NUM_BUFFER 2
+
+#define WIDTH  640
 #define HEIGHT 480
-
-
 
 
 namespace pcam
@@ -109,6 +87,21 @@ namespace pcam
         PCAM_PUBLIC Pcam();
 
     private:
+        static int v4l2_fd;
+        static void *v4l2_user_frame[NUM_BUFFER];
+
+        int rc;
+        int w = WIDTH, h = HEIGHT;
+        unsigned char *buf;
+        rc = v4l2init(w, h, V4L2_PIX_FMT_RGB24);
+        cv::Mat frame(h, w, CV_8UC3);
+
+        int v4l2init(int w, int h, __u32 pixelformat);
+        int v4l2end(void);
+        int v4l2grab(unsigned char **frame);
+        int v4l2release(int buf_idx);
+
+        /*
         struct buffer_addr_struct{
             void *start[FMT_NUM_PLANES];
             size_t length[FMT_NUM_PLANES];
@@ -151,6 +144,7 @@ namespace pcam
         void reset();
 
         void get_image();
+         */
         };
 } // namespace pcam
 
