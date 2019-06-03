@@ -29,6 +29,8 @@ namespace pcam {
         frame.data = buf;
         convert_frame_to_message(frame, 1, msg);
 
+        rc = v4l2release(rc);
+
         image_pub_->publish(msg);
     }
 
@@ -131,13 +133,9 @@ namespace pcam {
         buf.memory = V4L2_MEMORY_MMAP;
         buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
 
-        std::cout << v4l2_fd << std::endl;
-
-
-
         FD_ZERO(&fds);
         FD_SET(v4l2_fd, &fds);
-        tv.tv_sec = 0.5;
+        tv.tv_sec = 2;
         tv.tv_usec = 0;
         select(v4l2_fd + 1, &fds, NULL, NULL, &tv);
         if (FD_ISSET(v4l2_fd, &fds)) {
