@@ -63,7 +63,6 @@ extern "C" {
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
-#include "pcam_lib/cam.h"
 
 using namespace std::chrono;
 using namespace std;
