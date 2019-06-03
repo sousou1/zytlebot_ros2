@@ -274,6 +274,7 @@ namespace autonomous {
 
         // 以下デバッグ出力
 
+        /*
         if(DEBUG) {
             testTemplateMatching(aroundWhiteBinary, template_right_T, cv::Scalar(0, 0, 100));
             testTemplateMatching(aroundWhiteBinary, template_left_T, cv::Scalar(0, 100, 100));
@@ -289,6 +290,7 @@ namespace autonomous {
             //testSkin(caliblated);
             cv::waitKey(3);
         }
+         */
     }
 
     void Autonomous::set_param(){
