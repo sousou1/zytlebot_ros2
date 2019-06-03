@@ -41,7 +41,7 @@ namespace pcam {
         struct v4l2_buffer buf;
         enum v4l2_buf_type type;
 
-        v4l2_fd = open("/dev/video0", O_RDWR);
+        Pcam::v4l2_fd = open("/dev/video0", O_RDWR);
         if (v4l2_fd < 0) {
             fprintf(stderr, "open = %d, errno = %d\n", v4l2_fd, errno);
             return -1;
@@ -81,7 +81,7 @@ namespace pcam {
                 fprintf(stderr, "VIDIOC_QUERYBUF: errno = %d\n", errno);
                 return -1;
             }
-            v4l2_user_frame[i] = mmap(NULL, buf.length, PROT_READ | PROT_WRITE, MAP_SHARED, v4l2_fd, buf.m.offset);
+            Pcam::v4l2_user_frame[i] = mmap(NULL, buf.length, PROT_READ | PROT_WRITE, MAP_SHARED, v4l2_fd, buf.m.offset);
             if (!v4l2_user_frame[i] || v4l2_user_frame[i] == (void *)-1) {
                 fprintf(stderr, "mmap: errno = %d\n", errno);
                 return -1;
