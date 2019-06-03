@@ -86,23 +86,19 @@ namespace pcam
     private:
         static int v4l2_fd;
         static void *v4l2_user_frame[NUM_BUFFER];
-
-
-
         int rc;
         int w = WIDTH, h = HEIGHT;
         unsigned char *buf;
-        rc = v4l2init(w, h, V4L2_PIX_FMT_RGB24);
         cv::Mat frame(h, w, CV_8UC3);
 
         static int xioctl(int fd, int request, void *arg){
                 int rc;
-
                 do rc = ioctl(fd, request, arg);
                 while (-1 == rc && EINTR == errno);
                 return rc;
         }
 
+        void get_image();
         int v4l2init(int w, int h, __u32 pixelformat);
         int v4l2end(void);
         int v4l2grab(unsigned char **frame);
