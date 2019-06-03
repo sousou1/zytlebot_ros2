@@ -132,6 +132,10 @@ namespace pcam {
         buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
 
         std::cout << v4l2_fd << std::endl;
+        std::cout << w << std::endl;
+        std::cout << h << std::endl;
+        std::cout << fds << std::endl;
+
 
         FD_ZERO(&fds);
         FD_SET(v4l2_fd, &fds);
