@@ -137,11 +137,8 @@ namespace pcam {
         int fd_set;
 
 
-        fd_zero = FD_ZERO(&fds);
-        fd_set = FD_SET(v4l2_fd, &fds);
-
-        std::cout << fd_zero << std::endl;
-        std::cout << fd_set << std::endl;
+        std::cout << FD_ZERO(&fds) << std::endl;
+        std::cout << FD_SET(v4l2_fd, &fds) << std::endl;
         tv.tv_sec = 2;
         tv.tv_usec = 0;
         select(v4l2_fd + 1, &fds, NULL, NULL, &tv);
