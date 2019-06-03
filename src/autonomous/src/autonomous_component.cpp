@@ -83,6 +83,7 @@ namespace autonomous {
 
         // init start
         // TODO キャリブレーションファイル読み込み
+        cout << PROJECT_DIR + "/calibration.yml" << endl;
         cv::FileStorage fs(PROJECT_DIR + "/calibration.yml", cv::FileStorage::READ);
         fs["mtx"] >> camera_mtx;
         fs["dist"] >> camera_dist;
