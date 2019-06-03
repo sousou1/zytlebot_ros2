@@ -12,9 +12,7 @@ namespace pcam {
         rc = v4l2init(w, h, V4L2_PIX_FMT_RGB24);
         if (rc < 0) {
             fprintf(stderr, "v4l2init = %d\n", rc);
-            return -1;
         }
-        frame(h, w, CV_8UC3);
         image_pub_ = create_publisher<sensor_msgs::msg::Image>("/pcam/image_raw", 1);
 
         // TODO 時間設定
@@ -22,14 +20,14 @@ namespace pcam {
     }
 
     void Pcam::get_image() {
+        cv::Mat frame(h, w, CV_8UC3);
         auto msg = std::make_shared<sensor_msgs::msg::Image>();
         rc = v4l2grab(&buf);
         if (rc < 0) {
             fprintf(stderr, "v4l2grab = %d\n", rc);
-            return -1;
         }
         frame.data = buf;
-        convert_frame_to_message(frame, i, msg);
+        convert_frame_to_message(frame, 1, msg);
 
         image_pub_->publish(msg);
     }
