@@ -83,8 +83,8 @@ namespace pcam
         PCAM_PUBLIC Pcam();
 
     private:
-        static int v4l2_fd;
-        static void *v4l2_user_frame[NUM_BUFFER];
+        int v4l2_fd;
+        void *v4l2_user_frame[NUM_BUFFER];
         int rc;
         int w = WIDTH;
         int h = HEIGHT;
