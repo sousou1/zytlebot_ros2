@@ -208,13 +208,6 @@ namespace pcam {
         }
     }
 
-    int Pcam::xioctl(int fd, int request, void *arg){
-        int rc;
-        do rc = ioctl(fd, request, arg);
-        while (-1 == rc && EINTR == errno);
-        return rc;
-    }
-
 } // namespace pcam
 
 CLASS_LOADER_REGISTER_CLASS(pcam::Pcam, rclcpp::Node)

@@ -75,6 +75,16 @@ using std::placeholders::_1;
 #define WIDTH  640
 #define HEIGHT 480
 
+static int v4l2_fd;
+static void *v4l2_user_frame[NUM_BUFFER];
+
+static int xioctl(int fd, int request, void *arg){
+        int rc;
+
+        do rc = ioctl(fd, request, arg);
+        while (-1 == rc && EINTR == errno);
+        return rc;
+}
 
 namespace pcam
 {
@@ -83,8 +93,6 @@ namespace pcam
         PCAM_PUBLIC Pcam();
 
     private:
-        static int v4l2_fd;
-        static void *v4l2_user_frame[NUM_BUFFER];
         int rc;
         int w = WIDTH;
         int h = HEIGHT;
@@ -96,7 +104,6 @@ namespace pcam
         int v4l2grab(unsigned char **frame);
         int v4l2release(int buf_idx);
         std::string mat_type2encoding(int mat_type);
-        int xioctl(int fd, int request, void *arg);
         void convert_frame_to_message(
                 const cv::Mat & frame, size_t frame_id, sensor_msgs::msg::Image::SharedPtr msg);
 
