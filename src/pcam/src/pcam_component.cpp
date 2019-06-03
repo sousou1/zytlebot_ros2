@@ -133,13 +133,11 @@ namespace pcam {
 
         std::cout << v4l2_fd << std::endl;
 
-        int fd_zero;
-        int fd_set;
 
 
-        std::cout << FD_ZERO(&fds) << std::endl;
-        std::cout << FD_SET(v4l2_fd, &fds) << std::endl;
-        tv.tv_sec = 2;
+        FD_ZERO(&fds);
+        FD_SET(v4l2_fd, &fds);
+        tv.tv_sec = 0.5;
         tv.tv_usec = 0;
         select(v4l2_fd + 1, &fds, NULL, NULL, &tv);
         if (FD_ISSET(v4l2_fd, &fds)) {
