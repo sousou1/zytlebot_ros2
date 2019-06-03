@@ -133,7 +133,7 @@ namespace autonomous
 
         bool red_flag;
 
-        std::string PROJECT_DIR="/home/sou/zytlebot_ros2/src/autonomous";
+        std::string PROJECT_DIR="/home/fpga/zytlebot_ros2/src/autonomous";
         // 定数宣言
         int BIRDSEYE_LENGTH, CAMERA_WIDTH, CAMERA_HEIGHT;
 
