@@ -309,10 +309,7 @@ namespace autonomous
         rclcpp::Publisher<std_msgs::msg::String>::SharedPtr signal_search_;
 
         void red_flag_update(const std_msgs::msg::String::SharedPtr msg);
-#if SIM
-        void image_cb(const sensor_msgs::msg::Image::ConstSharedPtr msg);
-#else
-        void image_cb(const std_msgs::msg::UInt8MultiArray::SharedPtr msg);
+        void image_cb(const sensor_msgs::msg::Image::SharedPtr msg);
 #endif
         void set_param();
 
