@@ -47,11 +47,8 @@ extern "C" {
 
 // #include <boost/thread.hpp>
 
-// pcam使用時
-#include "std_msgs/msg/multi_array_layout.hpp"
-#include "std_msgs/msg/multi_array_dimension.hpp"
-#include "std_msgs/msg/u_int8_multi_array.hpp"
-#include "std_msgs/msg/string.hpp"
+#include "sensor_msgs/msg/image.hpp"
+
 
 #include <stdio.h>
 #include <unistd.h>
@@ -90,6 +87,14 @@ namespace pcam
         static int v4l2_fd;
         static void *v4l2_user_frame[NUM_BUFFER];
 
+        static int xioctl(int fd, int request, void *arg){
+                int rc;
+
+                do rc = ioctl(fd, request, arg);
+                while (-1 == rc && EINTR == errno);
+                return rc;
+        }
+
         int rc;
         int w = WIDTH, h = HEIGHT;
         unsigned char *buf;
@@ -100,51 +105,14 @@ namespace pcam
         int v4l2end(void);
         int v4l2grab(unsigned char **frame);
         int v4l2release(int buf_idx);
+        std::string mat_type2encoding(int mat_type);
 
-        /*
-        struct buffer_addr_struct{
-            void *start[FMT_NUM_PLANES];
-            size_t length[FMT_NUM_PLANES];
-        } *buffers;
 
-        static int xioctl(int fd, int request, void *arg){
-            int r;
-            do {
-                r = ioctl (fd, request, arg);
-                if (request == VIDIOC_DQBUF) {
-                    std::cout << "r : " << r << std::endl;
-                }
-            } while (-1 == r && EINTR == errno);
-            return r;
-        }
+        void convert_frame_to_message(
+                const cv::Mat & frame, size_t frame_id, sensor_msgs::msg::Image::SharedPtr msg);
 
-        unsigned char *buffer;
-        int fd;
-        struct v4l2_capability caps;
-
-        int num_planes;
-        struct v4l2_requestbuffers reqbuf;
-        int MAX_BUF_COUNT;
-
-        int pcam_frame;
-
-        std_msgs::msg::UInt8MultiArray::SharedPtr camdata;
-        struct v4l2_buffer buf;
-
-        struct v4l2_plane planes[FMT_NUM_PLANES];
-
-        bool CbFlag;
-
-        rclcpp::Publisher<std_msgs::msg::UInt8MultiArray>::SharedPtr image_pub_;
-
+        rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr image_pub_;
         rclcpp::TimerBase::SharedPtr timer_;
-
-        void setInit();
-
-        void reset();
-
-        void get_image();
-         */
         };
 } // namespace pcam
 
