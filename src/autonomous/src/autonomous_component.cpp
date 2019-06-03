@@ -83,6 +83,7 @@ namespace autonomous {
 
         // init start
         // TODO キャリブレーションファイル読み込み
+        cout << PROJECT_DIR + "/calibration.yml" << endl;
         cv::FileStorage fs(PROJECT_DIR + "/calibration.yml", cv::FileStorage::READ);
         fs["mtx"] >> camera_mtx;
         fs["dist"] >> camera_dist;
@@ -292,7 +293,7 @@ namespace autonomous {
 
     void Autonomous::set_param(){
         // 進行方向も初期化読み込み
-        std::ifstream ifs("/home/honsen_dir.txt");
+        std::ifstream ifs(PROJECT_DIR + "/honsen_dir.txt");
         std::string str;
         if (ifs.fail()) {
             std::cerr << "text file load fail" << std::endl;
@@ -309,7 +310,7 @@ namespace autonomous {
         }
 
         cout << "json before load" << endl;
-        ifstream fin(PROJECT_DIR + "autorace.json" );
+        ifstream fin(PROJECT_DIR + "/autorace.json" );
         if( !fin ){
             cout << "json load failed" << endl;
             return;
