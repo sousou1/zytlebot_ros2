@@ -302,7 +302,7 @@ namespace autonomous
 
 
         rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr image_sub_ ;
-#endif
+
         rclcpp::Subscription<std_msgs::msg::String>::SharedPtr red_pub_;
 
         rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr twist_pub;
@@ -310,7 +310,7 @@ namespace autonomous
 
         void red_flag_update(const std_msgs::msg::String::SharedPtr msg);
         void image_cb(const sensor_msgs::msg::Image::SharedPtr msg);
-#endif
+
         void set_param();
 
         void changePhase(std::string next_phase);
