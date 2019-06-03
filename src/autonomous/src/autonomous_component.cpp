@@ -122,13 +122,16 @@ namespace autonomous {
         cout << red_flag << endl;
     }
 
-#if SIM
-    void Autonomous::image_cb(const sensor_msgs::msg::Image::ConstSharedPtr msg){
-#else
-    void Autonomous::image_cb(const std_msgs::msg::UInt8MultiArray::SharedPtr msg){
-#endif
-
-#if SIM
+    void Autonomous::image_cb(const sensor_msgs::msg::Image::SharedPtr msg) {
+        cv::Mat frame(
+                msg->height, msg->width, encoding2mat_type(msg->encoding),
+                const_cast<unsigned char *>(msg->data.data()), msg->step);
+        if (msg->encoding == "rgb8") {
+            cv::cvtColor(frame, frame, cv::COLOR_RGB2BGR);
+        }
+        cv::Mat caliblated;
+        cv::remap(frame, caliblated, MapX, MapY, cv::INTER_LINEAR);
+        /*
         cv_bridge::CvImagePtr cv_ptr;
         try {
             // ROSからOpenCVの形式にtoCvCopy()で変換。cv_ptr->imageがcv::Matフォーマット。
@@ -140,7 +143,8 @@ namespace autonomous {
         }
         cv::Mat caliblated = cv_ptr->image;
         cv::imshow("image", caliblated);
-#else
+        */
+         /*
         cv::Mat base_image(CAMERA_HEIGHT, CAMERA_WIDTH, CV_8UC2);
         cv::Mat dstimg(CAMERA_HEIGHT, CAMERA_WIDTH, CV_8UC2);
         memcpy(base_image.data, &(msg->data[0]), CAMERA_WIDTH * CAMERA_HEIGHT * 2);
@@ -148,7 +152,7 @@ namespace autonomous {
 
         cv::Mat caliblated;
         cv::remap(dstimg, caliblated, MapX, MapY, cv::INTER_LINEAR);
-#endif
+         */
 
         detected_angle = 0;
 
