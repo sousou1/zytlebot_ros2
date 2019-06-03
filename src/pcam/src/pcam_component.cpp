@@ -134,7 +134,6 @@ namespace pcam {
         std::cout << v4l2_fd << std::endl;
         std::cout << w << std::endl;
         std::cout << h << std::endl;
-        std::cout << fds << std::endl;
 
 
         FD_ZERO(&fds);
