@@ -24,7 +24,6 @@ namespace pcam {
         rc = v4l2end();
         if (rc < 0) {
             fprintf(stderr, "v4l2release = %d\n", rc);
-            retur
     }
 
     void Pcam::get_image() {

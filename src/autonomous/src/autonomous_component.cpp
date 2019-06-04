@@ -57,7 +57,6 @@ namespace autonomous {
 
 
         // init start
-        // TODO キャリブレーションファイル読み込み
         cout << PROJECT_DIR + "/calibration.yml" << endl;
         cv::FileStorage fs(PROJECT_DIR + "/calibration.yml", cv::FileStorage::READ);
         fs["mtx"] >> camera_mtx;
@@ -406,7 +405,6 @@ namespace autonomous {
 
         cout << "json parse end" << endl;
 
-        // TODO IMAGE folder
         template_right_T = cv::imread(PROJECT_DIR + "/image/right_T.png", 1);
         template_left_T = cv::imread(PROJECT_DIR + "/image/left_T.png", 1);
         template_under_T = cv::imread(PROJECT_DIR + "/image/under_T.png", 1);
@@ -488,7 +486,7 @@ namespace autonomous {
         //limitedTwistPub();
 
 
-        // TODO valid setSearchType();
+        setSearchType();
 
         // param set end
         cout << "Hue_h" << Hue_h << endl;
