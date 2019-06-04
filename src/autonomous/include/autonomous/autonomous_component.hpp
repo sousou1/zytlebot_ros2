@@ -390,6 +390,8 @@ namespace autonomous
         std::vector <cv::Vec4i> getHoughLinesP(cv::Mat image, int threshold, double minLineLength, double maxLineGap);
 
         int encoding2mat_type(const std::string & encoding);
+        
+        std::string mat_type2encoding(int mat_type);
 
         void convert_frame_to_message(
                 const cv::Mat & frame, size_t frame_id, sensor_msgs::msg::Image::SharedPtr msg);

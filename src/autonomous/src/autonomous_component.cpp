@@ -52,31 +52,6 @@ namespace autonomous {
 
     Autonomous::Autonomous()
             : Node("autonomous") {
-        /*
-#if !DEBUG
-        off_t physical_address = 0x41210000;
-
-        // Switch
-
-        //initialize
-        if ((fd = open("/dev/mem", O_RDWR | O_SYNC)) == -1) FATAL;
-        map_base = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, physical_address & ~MAP_MASK);
-        if (map_base == (void *) -1) FATAL;
-        virt_addr = map_base + (physical_address & MAP_MASK);
-        sw1_flag = false;
-        sw2_flag = false;
-        sw3_flag = false;
-
-
-        off_t physical_address2 = 0x41240000;
-        // LED
-
-        //initialize
-        map_base2 = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, physical_address2 & ~MAP_MASK);
-        if (map_base2 == (void *) -1) FATAL;
-        virt_addr2 = map_base2 + (physical_address2 & MAP_MASK);
-#endif
-         */
 
         cout << "Start autonomous" << endl;
 
@@ -278,7 +253,7 @@ namespace autonomous {
         auto pub_img = std::make_shared<sensor_msgs::msg::Image>();
         convert_frame_to_message(aroundWhiteBinary, 1, pub_img);
 
-        image_pub_->publish(pub_img);
+        test_pub_->publish(pub_img);
 
         /*
         if(DEBUG) {
@@ -2001,6 +1976,22 @@ namespace autonomous {
         msg->data.resize(size);
         memcpy(&msg->data[0], frame.data, size);
         msg->header.frame_id = std::to_string(frame_id);
+    }
+
+    std::string Autonomous::mat_type2encoding(int mat_type)
+    {
+        switch (mat_type) {
+            case CV_8UC1:
+                return "mono8";
+            case CV_8UC3:
+                return "bgr8";
+            case CV_16SC1:
+                return "mono16";
+            case CV_8UC4:
+                return "rgba8";
+            default:
+                throw std::runtime_error("Unsupported encoding type");
+        }
     }
 
 } // namespace autorace
