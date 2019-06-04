@@ -308,6 +308,8 @@ namespace autonomous
         rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr twist_pub;
         rclcpp::Publisher<std_msgs::msg::String>::SharedPtr signal_search_;
 
+        rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr test_pub_;
+
         void red_flag_update(const std_msgs::msg::String::SharedPtr msg);
         void image_cb(const sensor_msgs::msg::Image::SharedPtr msg);
 
@@ -388,6 +390,9 @@ namespace autonomous
         std::vector <cv::Vec4i> getHoughLinesP(cv::Mat image, int threshold, double minLineLength, double maxLineGap);
 
         int encoding2mat_type(const std::string & encoding);
+
+        void convert_frame_to_message(
+                const cv::Mat & frame, size_t frame_id, sensor_msgs::msg::Image::SharedPtr msg);
 
 
     };

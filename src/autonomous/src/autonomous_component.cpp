@@ -110,6 +110,7 @@ namespace autonomous {
         red_pub_ = this->create_subscription<std_msgs::msg::String>(
                 "/red_flag", std::bind(&Autonomous::red_flag_update, this, _1));
 
+        test_pub_ = create_publisher<sensor_msgs::msg::Image>("/test_image", 1);
     }
 
     void Autonomous::red_flag_update(const std_msgs::msg::String::SharedPtr msg) {
@@ -273,6 +274,11 @@ namespace autonomous {
         std::cout << "速度     : " << twist.linear.x << " 角度 : " << twist.angular.z << std::endl;
 
         // 以下デバッグ出力
+
+        auto pub_img = std::make_shared<sensor_msgs::msg::Image>();
+        convert_frame_to_message(aroundWhiteBinary, 1, pub_img);
+
+        image_pub_->publish(pub_img);
 
         /*
         if(DEBUG) {
@@ -1981,6 +1987,20 @@ namespace autonomous {
         } else {
             throw std::runtime_error("Unsupported encoding type");
         }
+    }
+
+    void Autonomous::convert_frame_to_message(
+            const cv::Mat & frame, size_t frame_id, sensor_msgs::msg::Image::SharedPtr msg)
+    {
+        // copy cv information into ros message
+        msg->height = frame.rows;
+        msg->width = frame.cols;
+        msg->encoding = mat_type2encoding(frame.type());
+        msg->step = static_cast<sensor_msgs::msg::Image::_step_type>(frame.step);
+        size_t size = frame.step * frame.rows;
+        msg->data.resize(size);
+        memcpy(&msg->data[0], frame.data, size);
+        msg->header.frame_id = std::to_string(frame_id);
     }
 
 } // namespace autorace
