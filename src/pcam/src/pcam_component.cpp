@@ -50,7 +50,7 @@ namespace pcam {
         struct v4l2_buffer buf;
         enum v4l2_buf_type type;
 
-        v4l2_fd = open("/dev/video0", O_RDWR);
+        v4l2_fd = open("/dev/video1", O_RDWR);
         if (v4l2_fd < 0) {
             fprintf(stderr, "open = %d, errno = %d\n", v4l2_fd, errno);
             return -1;
