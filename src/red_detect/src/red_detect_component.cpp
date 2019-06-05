@@ -20,7 +20,7 @@ namespace red_detect {
 
 
         // TODO subscribe先はtopicに応じて変更
-        image_sub_ = this->create_subscription<std_msgs::msg::UInt8MultiArray>(
+        image_sub_ = this->create_subscription<sensor_msgs::msg::Image>(
                 "/webcam/image_array", std::bind(&RedDetect::image_cb, this, _1));
 
         signal_search_ = this->create_subscription<std_msgs::msg::String>(
@@ -124,7 +124,7 @@ namespace red_detect {
         }
     }
 
-    void RedDetect::image_cb(const std_msgs::msg::UInt8MultiArray::SharedPtr msg) {
+    void RedDetect::image_cb(const sensor_msgs::msg::Image msg) {
 
         cout << "search signal Type = " << how_search << "!!!!!!" << endl;
 
@@ -132,10 +132,18 @@ namespace red_detect {
         send_msg->data = "false";
         if (how_search != -1) {
             cout << "searching signal!!!!" << endl;
-            cv::Mat baseImage(480, 640, CV_8UC2);
-            cv::Mat dstimg(480, 640, CV_8UC2);
+            //cv::Mat baseImage(480, 640, CV_8UC2);
+            //cv::Mat dstimg(480, 640, CV_8UC2);
+            cv::Mat frame(
+                    msg->height, msg->width, encoding2mat_type(msg->encoding),
+                    const_cast<unsigned char *>(msg->data.data()), msg->step);
+            if (msg->encoding == "rgb8") {
+                cv::cvtColor(frame, dstimg, cv::COLOR_RGB2BGR);
+            }
+            /*
             memcpy(baseImage.data, &(msg->data[0]), 640 * 480 * 2);
             cv::cvtColor(baseImage, dstimg, cv::COLOR_YUV2BGR_YUYV);
+             */
 
             // TODO receive window_mode
             if (how_search == 0) window_mode = 0;

@@ -134,13 +134,13 @@ namespace red_detect
         int find_count;
 
         rclcpp::Publisher<std_msgs::msg::String>::SharedPtr red_pub_;
-        rclcpp::Subscription<std_msgs::msg::UInt8MultiArray>::SharedPtr image_sub_ ;
+        rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr image_sub_ ;
         rclcpp::Subscription<std_msgs::msg::String>::SharedPtr signal_search_;
 
         void check_window();
         void check_window2(std::string project_folder);
         void signalSearchCb(const std_msgs::msg::String::SharedPtr msg);
-        void image_cb(const std_msgs::msg::UInt8MultiArray::SharedPtr msg);
+        void image_cb(const sensor_msgs::msg::Image msg);
         bool hwresultcheck(unsigned short* sw_feature, unsigned short* hw_feature, int start, int end);
         void test_four_window(float* result, int num, Mat rgb[4], Mat hls[4], Mat gray[4], double* time0, double* time1, double* time2, double *time3);
         vector<pair<vector<int>, float>> test_one_frame(Mat frame, int mode);
