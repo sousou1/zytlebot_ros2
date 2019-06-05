@@ -140,13 +140,14 @@ namespace red_detect
         void check_window();
         void check_window2(std::string project_folder);
         void signalSearchCb(const std_msgs::msg::String::SharedPtr msg);
-        void image_cb(const sensor_msgs::msg::Image msg);
+        void image_cb(const sensor_msgs::msg::Image::SharedPtr msg);
         bool hwresultcheck(unsigned short* sw_feature, unsigned short* hw_feature, int start, int end);
         void test_four_window(float* result, int num, Mat rgb[4], Mat hls[4], Mat gray[4], double* time0, double* time1, double* time2, double *time3);
         vector<pair<vector<int>, float>> test_one_frame(Mat frame, int mode);
+        int encoding2mat_type(const std::string & encoding);
 
 
-        };
+    };
 } // namespace red_detect
 
 #endif // REDDETECT__REDDETECT_COMPONENT_HPP_
