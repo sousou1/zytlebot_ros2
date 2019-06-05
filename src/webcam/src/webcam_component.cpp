@@ -9,11 +9,11 @@ namespace webcam {
 
     Webcam::Webcam()
             : Node("webcam") {
-        image_pub_ = create_publisher<std_msgs::msg::UInt8MultiArray>("/webcam/image_array", 1);
+        image_pub_ = create_publisher<sensor_msgs::msg::Image>("/webcam/image_raw", 1);
 
         set_Init();
 
-        timer_ = create_wall_timer(1s, std::bind(&Webcam::get_image, this));
+        timer_ = create_wall_timer(100ms, std::bind(&Webcam::get_image, this));
     }
 
     void Webcam::get_image() {
@@ -52,8 +52,14 @@ namespace webcam {
                     return;
                 }
 
-                memcpy(&(camdata->data[0]), buffers[buf.index], 640 * 480 * 2);
-                image_pub_->publish(camdata);
+                cv::Mat frame(h, w, CV_8UC3);
+                auto msg = std::make_shared<sensor_msgs::msg::Image>();
+
+                memcpy(frame.data, buffers[buf.index], 640 * 480 * 2);
+
+                convert_frame_to_message(frame, 1, msg);
+
+                image_pub_->publish(msg);
 
                 // Connect buffer to queue for next capture.
                 if (-1 == xioctl(fd, VIDIOC_QBUF, &buf)) {
@@ -196,11 +202,36 @@ namespace webcam {
 
 
         std::vector<uint8_t> vec = std::vector<uint8_t>(WIDTH*HEIGHT*2);
+    }
 
-        std_msgs::msg::UInt8MultiArray::SharedPtr camdatatemp(new std_msgs::msg::UInt8MultiArray);
-        camdatatemp->data = vec;
+    void Webcam::convert_frame_to_message(
+            const cv::Mat & frame, size_t frame_id, sensor_msgs::msg::Image::SharedPtr msg)
+    {
+        // copy cv information into ros message
+        msg->height = frame.rows;
+        msg->width = frame.cols;
+        msg->encoding = mat_type2encoding(frame.type());
+        msg->step = static_cast<sensor_msgs::msg::Image::_step_type>(frame.step);
+        size_t size = frame.step * frame.rows;
+        msg->data.resize(size);
+        memcpy(&msg->data[0], frame.data, size);
+        msg->header.frame_id = std::to_string(frame_id);
+    }
 
-        camdata = camdatatemp;
+    std::string Webcam::mat_type2encoding(int mat_type)
+    {
+        switch (mat_type) {
+            case CV_8UC1:
+                return "mono8";
+            case CV_8UC3:
+                return "bgr8";
+            case CV_16SC1:
+                return "mono16";
+            case CV_8UC4:
+                return "rgba8";
+            default:
+                throw std::runtime_error("Unsupported encoding type");
+        }
     }
 } // namespace autorace
 

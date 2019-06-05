@@ -125,13 +125,12 @@ namespace webcam
         int usbcam_frame;
         std::chrono::system_clock::time_point  t1, t2, t3, t4, t5, t6, t7;
 
-        std_msgs::msg::UInt8MultiArray::SharedPtr camdata;
         struct 	v4l2_buffer buf;
 
 
         bool CbFlag;
 
-        rclcpp::Publisher<std_msgs::msg::UInt8MultiArray>::SharedPtr image_pub_;
+        rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr image_pub_;
 
         rclcpp::TimerBase::SharedPtr timer_;
 
@@ -140,7 +139,12 @@ namespace webcam
         void reset();
 
         void get_image();
-        };
+
+        void convert_frame_to_message(
+                const cv::Mat & frame, size_t frame_id, sensor_msgs::msg::Image::SharedPtr msg);
+
+        std::string mat_type2encoding(int mat_type);
+    };
 } // namespace webcam
 
 #endif // WEBCAM__WEBCAM_COMPONENT_HPP_
