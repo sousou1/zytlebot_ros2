@@ -283,6 +283,8 @@ namespace autonomous
 
         double before_twist_x;
 
+        bool std_out = true;
+
         //////////
 
 

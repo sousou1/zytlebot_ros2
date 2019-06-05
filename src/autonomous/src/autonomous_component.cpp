@@ -53,11 +53,11 @@ namespace autonomous {
     Autonomous::Autonomous()
             : Node("autonomous") {
 
-        cout << "Start autonomous" << endl;
+        if (std_out) cout << "Start autonomous" << endl;
 
 
         // init start
-        cout << PROJECT_DIR + "/calibration.yml" << endl;
+        if (std_out) cout << PROJECT_DIR + "/calibration.yml" << endl;
         cv::FileStorage fs(PROJECT_DIR + "/calibration.yml", cv::FileStorage::READ);
         fs["mtx"] >> camera_mtx;
         fs["dist"] >> camera_dist;
@@ -94,8 +94,8 @@ namespace autonomous {
             red_flag = false;
         }
 
-        cout << msg->data << endl;
-        cout << red_flag << endl;
+        if (std_out) cout << msg->data << endl;
+        if (std_out) cout << red_flag << endl;
     }
 
     void Autonomous::image_cb(const sensor_msgs::msg::Image::SharedPtr msg) {
@@ -114,7 +114,7 @@ namespace autonomous {
             cv_ptr = cv_bridge::toCvCopy(msg, "bgr8");
         }
         catch (cv_bridge::Exception &e) {
-            cout << "error image" << endl;
+            if (std_out) cout << "error image" << endl;
             return;
         }
         cv::Mat caliblated = cv_ptr->image;
@@ -168,7 +168,7 @@ namespace autonomous {
         find_left_line = false;
 
         system("clear");
-        cout << "現在のフェーズ : " << now_phase << std::endl;
+        if (std_out) cout << "現在のフェーズ : " << now_phase << std::endl;
         std::string direction;
         switch (now_dir) {
             case 0: direction = "南";
@@ -183,8 +183,8 @@ namespace autonomous {
                 break;
         }
 
-        cout << "次の目的地 : x = " << next_tile_x << " y =  " << next_tile_y << " type=" << map_data[next_tile_y][next_tile_x][0] << std::endl;
-        cout << "現在の進行方向  " << direction << std::endl;
+        if (std_out) cout << "次の目的地 : x = " << next_tile_x << " y =  " << next_tile_y << " type=" << map_data[next_tile_y][next_tile_x][0] << std::endl;
+        if (std_out) cout << "現在の進行方向  " << direction << std::endl;
 
 
         // ---------------controller----------------
@@ -239,13 +239,13 @@ namespace autonomous {
         }
 
         // ---------------controller end----------------
-        cout << "走行距離 : " << mileage << " 合計 " << phaseRunMileage << std::endl;
-        cout << "実行時間 : " << get_time_sec() - processingStartTime << "s" << std::endl;
-        cout << "周期時間 : " << get_time_sec() - cycleTime << "s" << std::endl;
+        if (std_out) cout << "走行距離 : " << mileage << " 合計 " << phaseRunMileage << std::endl;
+        if (std_out) cout << "実行時間 : " << get_time_sec() - processingStartTime << "s" << std::endl;
+        if (std_out) cout << "周期時間 : " << get_time_sec() - cycleTime << "s" << std::endl;
         // cycleTimeの更新
         cycleTime = get_time_sec();
 
-        cout << "速度     : " << twist.linear.x << " 角度 : " << twist.angular.z << std::endl;
+        if (std_out) cout << "速度     : " << twist.linear.x << " 角度 : " << twist.angular.z << std::endl;
 
         // 以下デバッグ出力
 
@@ -282,23 +282,23 @@ namespace autonomous {
         }
         int cnt = 0;
         while (getline(ifs, str)) {
-            // cout << "[" << str << "]" << std::endl;
+            // if (std_out) cout << "[" << str << "]" << std::endl;
             int num = std::atoi(str.c_str());
-            // cout << num << std::endl;
+            // if (std_out) cout << num << std::endl;
             intersectionDir[cnt++] = num;
         }
         for (int i = 0; i < cnt; i++) {
-            cout << intersectionDir[i] << std::endl;
+            if (std_out) cout << intersectionDir[i] << std::endl;
         }
 
-        cout << "json before load" << endl;
+        if (std_out) cout << "json before load" << endl;
         ifstream fin(PROJECT_DIR + "/autorace.json" );
         if( !fin ){
-            cout << "json load failed" << endl;
+            if (std_out) cout << "json load failed" << endl;
             return;
         }
 
-        cout << "json loaded" << endl;
+        if (std_out) cout << "json loaded" << endl;
 
         stringstream strstream;
         strstream << fin.rdbuf();
@@ -320,7 +320,7 @@ namespace autonomous {
 
         // 定数をセット
 
-        cout << "json parse start" << endl;
+        if (std_out) cout << "json parse start" << endl;
 
         Hue_l = autorace["hue_l"].int_value();
         Hue_h = autorace["hue_h"].int_value();
@@ -334,7 +334,7 @@ namespace autonomous {
         now_dir = autorace["start_dir"].int_value();
 
 
-        cout << "json parse 2" << endl;
+        if (std_out) cout << "json parse 2" << endl;
 
         BURGER_MAX_LIN_VEL = autorace["burger_max_lin_vel"].number_value();
         BURGER_MAX_ANG_VEL = autorace["burger_max_ang_vel"].number_value();
@@ -361,7 +361,7 @@ namespace autonomous {
         RED_OBJ_SEARCH = autorace["red_obj_search"].bool_value();
         FIGURE_SEARCH = autorace["figure_search"].bool_value();
 
-        cout << "json parse 3" << endl;
+        if (std_out) cout << "json parse 3" << endl;
 
         AVOID_ROT_STRAIGHT = autorace["avoid_rot_straight"].number_value();
         AVOID_STRAIGHT_TIME = autorace["avoid_straight_time"].number_value();
@@ -403,7 +403,9 @@ namespace autonomous {
         SKIN_LOW_S = autorace["skin_low_s"].int_value();
         SKIN_LOW_V = autorace["skin_low_v"].int_value();
 
-        cout << "json parse end" << endl;
+        std_out = autorace["std_out"].bool_value();
+
+        if (std_out) cout << "json parse end" << endl;
 
         template_right_T = cv::imread(PROJECT_DIR + "/image/right_T.png", 1);
         template_left_T = cv::imread(PROJECT_DIR + "/image/left_T.png", 1);
@@ -489,15 +491,15 @@ namespace autonomous {
         setSearchType();
 
         // param set end
-        cout << "Hue_h" << Hue_h << endl;
-        cout << "red_obj_search" << RED_OBJ_SEARCH << endl;
-        cout << "burager_max_lin_vel" << BURGER_MAX_LIN_VEL << endl;
+        if (std_out) cout << "Hue_h" << Hue_h << endl;
+        if (std_out) cout << "red_obj_search" << RED_OBJ_SEARCH << endl;
+        if (std_out) cout << "burager_max_lin_vel" << BURGER_MAX_LIN_VEL << endl;
     }
 
 
 // phaseの変更ともろもろの値の初期化
     void Autonomous::changePhase(std::string next_phase) {
-        cout << "change phase!" << next_phase << std::endl;
+        if (std_out) cout << "change phase!" << next_phase << std::endl;
         // 前のphaseの結果によって変更される値を処理する
         now_phase = next_phase;
         phaseStartTime = get_time_sec();
@@ -565,9 +567,9 @@ namespace autonomous {
             }
         }
 
-        cout << "左車線の検知 : " << find_left_line << " | 検知数 = " << average_cnt << std::endl;
-        cout << "推定された左車線の位置 : " << detected_line_x << std::endl;
-        cout << "全体の傾き : " << degree_average << std::endl;
+        if (std_out) cout << "左車線の検知 : " << find_left_line << " | 検知数 = " << average_cnt << std::endl;
+        if (std_out) cout << "推定された左車線の位置 : " << detected_line_x << std::endl;
+        if (std_out) cout << "全体の傾き : " << degree_average << std::endl;
 
         return degree_average;
     }
@@ -620,7 +622,7 @@ namespace autonomous {
         } else if (tileType == 2 || tileType == 5 || tileType == 6) {
             // 横断歩道
             if (crosswalkFlag) {
-                cout << "横断歩道発見" << std::endl;
+                if (std_out) cout << "横断歩道発見" << std::endl;
                 changePhase("crosswalk");
             }
         } else if (intersectionDetectionFlag) {
@@ -678,7 +680,7 @@ namespace autonomous {
                 if (nextDirection == 1) {
                     intersectionAfterCrosswalk = true;
                     nowIntersectionCount++;
-                    cout << "十字路を右に曲がる" << std::endl;
+                    if (std_out) cout << "十字路を右に曲がる" << std::endl;
                     now_dir = (now_dir + 1) % 4;
                     changePhase("turn_right");
                     setNextTile();
@@ -727,7 +729,7 @@ namespace autonomous {
             setNextTile();
         } else if (tileType == 2 || tileType == 5 || tileType == 6) {
             // 横断歩道
-            cout << "横断歩道発見" << std::endl;
+            if (std_out) cout << "横断歩道発見" << std::endl;
             changePhase("crosswalk");
         } else {
             if (tileType == 7) { // T字路
@@ -784,7 +786,7 @@ namespace autonomous {
                 if (nextDirection == 1) {
                     intersectionAfterCrosswalk = true;
                     nowIntersectionCount++;
-                    cout << "十字路を右に曲がる" << std::endl;
+                    if (std_out) cout << "十字路を右に曲がる" << std::endl;
                     now_dir = (now_dir + 1) % 4;
                     changePhase("turn_right");
                     setNextTile();
@@ -1087,8 +1089,8 @@ namespace autonomous {
         twist.angular.z = LEFT_CURVE_ROT + (BIRDSEYE_LENGTH * (1 + RUN_LINE) - temp_detect_line) / 100;
 
         system("clear");
-        cout << "default : " << LEFT_CURVE_VEL << endl;
-        cout << "this : " << (BIRDSEYE_LENGTH * (1 + RUN_LINE) - temp_detect_line) / 100 << endl;
+        if (std_out) cout << "default : " << LEFT_CURVE_VEL << endl;
+        if (std_out) cout << "this : " << (BIRDSEYE_LENGTH * (1 + RUN_LINE) - temp_detect_line) / 100 << endl;
 
         limitedTwistPub();
     }
@@ -1152,7 +1154,7 @@ namespace autonomous {
                             // 現在のLEFT_CURVE_VEL, LEFT_CURVE_ROTを補正する。
                             if (temp_detect_line == 0) {
                                 temp_detect_line = left_lines[i][0] - (BIRDSEYE_LENGTH * 0.7 - left_lines[i][1]) * (left_lines[i][2] - left_lines[i][0]) / (left_lines[i][1] - left_lines[i][3]);
-                                cout << "temp_detect_line   " <<  temp_detect_line << std::endl;
+                                if (std_out) cout << "temp_detect_line   " <<  temp_detect_line << std::endl;
                             } else {
                                 double temp = left_lines[i][0] - (BIRDSEYE_LENGTH * 0.7 - left_lines[i][1]) * (left_lines[i][2] - left_lines[i][0]) / (left_lines[i][1] - left_lines[i][3]);
                                 if (abs(runLine - temp) < abs(runLine - temp_detect_line)) {
@@ -1304,7 +1306,7 @@ namespace autonomous {
                 }
             }
         }
-        cout << "ラインX = " << detected_line_x << std::endl;
+        if (std_out) cout << "ラインX = " << detected_line_x << std::endl;
         detected_line_x = temp_detected_line;
     }
 
@@ -1386,7 +1388,7 @@ namespace autonomous {
             limitedTwistPub();
             return;
         }
-        cout << "line search" << std::endl;
+        if (std_out) cout << "line search" << std::endl;
 
 
         // 三秒ごとに首を振る向きを変える
@@ -1401,7 +1403,7 @@ namespace autonomous {
             twist.angular.z = -0.3;
         } else {
             phaseStartTime = get_time_sec();
-            cout << "one more search" << std::endl;
+            if (std_out) cout << "one more search" << std::endl;
         }
 
         limitedTwistPub();
@@ -1424,7 +1426,7 @@ namespace autonomous {
             limitedTwistPub();
             return;
         }
-        cout << "now search right_lane_right_T " << std::endl;
+        if (std_out) cout << "now search right_lane_right_T " << std::endl;
 
         // 三秒ごとに首を振る向きを変える
         if (now - phaseStartTime < 3.0) {
@@ -1438,7 +1440,7 @@ namespace autonomous {
             twist.angular.z = 0.3;
         } else {
             phaseStartTime = get_time_sec();
-            cout << "Right Lane one more search" << std::endl;
+            if (std_out) cout << "Right Lane one more search" << std::endl;
         }
         limitedTwistPub();
     }
@@ -1605,7 +1607,7 @@ namespace autonomous {
                 compare.timeStamp = get_time_sec();
                 *itr = compare;
                 findObj = true;
-                cout << objType << " update object cnt = " << compare.findCnt << std::endl;
+                if (std_out) cout << objType << " update object cnt = " << compare.findCnt << std::endl;
                 break;
             }
             itr++;
@@ -1664,7 +1666,7 @@ namespace autonomous {
         // cv::bitwise_and(redRoi, redRoi, red_image, red_mask1 + red_mask2);
 
         int fractionNum = cv::countNonZero(red_mask1 + red_mask2);
-        cout << "SEARCH RED OBJECT !!!!! fractionNum :" << fractionNum << endl;
+        if (std_out) cout << "SEARCH RED OBJECT !!!!! fractionNum :" << fractionNum << endl;
         if (fractionNum > 100 && RED_OBJ_SEARCH) {
             Right_LED = true;
         } else {
@@ -1677,7 +1679,7 @@ namespace autonomous {
             if (tileType == 7 && nextDirection == 0) {
                 setNextTile(); // T字路直進の場合スキップ
                 nowIntersectionCount++;
-                cout << "Skip Tile!!!! next TileType = " << tileType << "!  nextDirection = " << nextDirection << endl;
+                if (std_out) cout << "Skip Tile!!!! next TileType = " << tileType << "!  nextDirection = " << nextDirection << endl;
             }
             changePhase("find_obs");
         }
@@ -1693,7 +1695,7 @@ namespace autonomous {
         // cv::bitwise_and(redRoi, redRoi, red_image, red_mask1 + red_mask2);
 
         int fractionNum = cv::countNonZero(skin_mask);
-        cout << "FIGUREE !!!!! fractionNum :" << fractionNum << endl;
+        if (std_out) cout << "FIGUREE !!!!! fractionNum :" << fractionNum << endl;
 
         if (findFigureFlag) {
             if (get_time_sec() - phaseStartTime > 20.0 || fractionNum < 500 && FIGURE_SEARCH) {
@@ -1733,7 +1735,7 @@ namespace autonomous {
         }
 
         int fractionNum = cv::countNonZero(skin_mask);
-        cout << "肌色成分 : " << fractionNum << std::endl;
+        if (std_out) cout << "肌色成分 : " << fractionNum << std::endl;
 
         // BGS
         bgs->apply(image, bgmask);
@@ -1829,7 +1831,7 @@ namespace autonomous {
             doSearch = false;
         }
 
-        cout << "現在" << searchType << "検索中" << std::endl;
+        if (std_out) cout << "現在" << searchType << "検索中" << std::endl;
 
         double maxVal;
         cv::Mat result;
@@ -1846,11 +1848,11 @@ namespace autonomous {
             cv::matchTemplate(searchRoi, template_rot, result, cv::TM_CCORR_NORMED);
             cv::Point maxPt;
             cv::minMaxLoc(result, 0, &maxVal, 0, &maxPt);
-            cout << "一致度　= " << maxVal << " | 位置　x = " << maxPt.x + template_img.cols / 2 << "  y = " << maxPt.y + template_img.rows / 2 << std::endl;
+            if (std_out) cout << "一致度　= " << maxVal << " | 位置　x = " << maxPt.x + template_img.cols / 2 << "  y = " << maxPt.y + template_img.rows / 2 << std::endl;
             // cv::rectangle(aroundDebug, cv::Point(searchLeftX + maxPt.x, maxPt.y), cv::Point(searchLeftX + maxPt.x + template_right_T.cols, maxPt.y + template_right_T.rows), cv::Scalar(255 * maxVal, 255 * maxVal, 255 * maxVal), 2, 8, 0);
             if (maxVal > DETECT_TEMPLATE_RATE) {
                 addObject(searchType, searchLeftX + maxPt.x  + template_right_T.cols / 2, maxPt.y + template_right_T.rows);
-                cout << searchType << " find! y(bottom) =  " << maxPt.y + template_img.rows << std::endl;
+                if (std_out) cout << searchType << " find! y(bottom) =  " << maxPt.y + template_img.rows << std::endl;
                 find = true;
             }
         }
@@ -1881,7 +1883,7 @@ namespace autonomous {
         cv::matchTemplate(aroundWhiteBinary, template_rot, result, cv::TM_CCORR_NORMED);
         cv::Point maxPt;
         cv::minMaxLoc(result, 0, &maxVal, 0, &maxPt);
-        cout << "一致度　= " << maxVal << " | 位置　x = " << maxPt.x + template_img.cols / 2 << "  y = " << maxPt.y + template_img.rows / 2 << std::endl;
+        if (std_out) cout << "一致度　= " << maxVal << " | 位置　x = " << maxPt.x + template_img.cols / 2 << "  y = " << maxPt.y + template_img.rows / 2 << std::endl;
         if (maxVal > 0.75) {
             if (DEBUG) {
                 cv::rectangle(aroundDebug, cv::Point(maxPt.x, maxPt.y),
@@ -1898,8 +1900,8 @@ namespace autonomous {
         for (itr = objects.begin(); itr != objects.end();) {
             OBJECT obj = *itr;
 
-            cout << objCnt << " Type" << obj.objType << std::endl;
-            cout << "検知回数 : " << obj.findCnt << " |  y =  " << obj.beforeY << std::endl;
+            if (std_out) cout << objCnt << " Type" << obj.objType << std::endl;
+            if (std_out) cout << "検知回数 : " << obj.findCnt << " |  y =  " << obj.beforeY << std::endl;
 
             itr++;
             objCnt++;

@@ -59,6 +59,7 @@
     "skin_low_s": 30,
     "skin_low_v": 60,
     "detect_template_rate": 0.8,
-    "red_detect_num": 250
+    "red_detect_num": 250,
+    "std_out": true
   }
 }
