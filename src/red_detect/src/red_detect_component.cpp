@@ -133,7 +133,7 @@ namespace red_detect {
         if (how_search != -1) {
             cout << "searching signal!!!!" << endl;
             //cv::Mat baseImage(480, 640, CV_8UC2);
-            //cv::Mat dstimg(480, 640, CV_8UC2);
+            cv::Mat dstimg(480, 640, CV_8UC2);
             cv::Mat frame(
                     msg->height, msg->width, encoding2mat_type(msg->encoding),
                     const_cast<unsigned char *>(msg->data.data()), msg->step);
