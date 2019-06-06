@@ -19,13 +19,6 @@ namespace pcam {
         timer_ = create_wall_timer(100ms, std::bind(&Pcam::get_image, this));
     }
 
-    Pcam::Pcam()
-            : ~Node("pcam") {
-        rc = v4l2end();
-        if (rc < 0) {
-            fprintf(stderr, "v4l2release = %d\n", rc);
-    }
-
     void Pcam::get_image() {
         cv::Mat frame(h, w, CV_8UC3);
         auto msg = std::make_shared<sensor_msgs::msg::Image>();
