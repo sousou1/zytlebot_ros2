@@ -260,7 +260,7 @@ namespace autonomous {
         // 以下デバッグ出力
 
         auto pub_img = std::make_shared<sensor_msgs::msg::Image>();
-        if (std_out) convert_frame_to_message(aroundImg, 1, pub_img);
+        if (std_out) convert_frame_to_message(aroundWhiteBinary, 1, pub_img);
 
         if (std_out) test_pub_->publish(pub_img);
 
@@ -1826,6 +1826,7 @@ namespace autonomous {
         int searchLeftX = (int)(BIRDSEYE_LENGTH * 1);
 
         bool doSearch = true;
+        bool isIntersection = false;
 
         if (searchType == "right_T") {
             template_img = template_right_T;
@@ -1837,6 +1838,7 @@ namespace autonomous {
             template_img = template_crosswalk;
         } else if (searchType == "intersection") {
             template_img = template_intersection;
+            isIntersection = true;
         } else if (searchType == "right_curve") {
             template_img = template_right_curve;
         } else {
@@ -1854,6 +1856,12 @@ namespace autonomous {
             cv::Mat affine = cv::getRotationMatrix2D(cv::Point2f(template_img.cols / 2 , template_img.rows / 2), template_angle * -0.7, 1.0);
             cv::Mat template_rot;
             cv::warpAffine(template_img, template_rot, affine, template_img.size(), cv::INTER_CUBIC);
+
+            if (isIntersection) {
+                cv::Mat searchRoi(aroundWhiteBinary, cv::Rect(searchLeftX, 0, BIRDSEYE_LENGTH * 1.5, BIRDSEYE_LENGTH * 50));
+            } else {
+                cv::Mat searchRoi(aroundWhiteBinary, cv::Rect(searchLeftX, 0, BIRDSEYE_LENGTH * 1.5, BIRDSEYE_LENGTH));
+            }
 
             cv::Mat searchRoi(aroundWhiteBinary, cv::Rect(searchLeftX, 0, BIRDSEYE_LENGTH * 1.5, BIRDSEYE_LENGTH));
 
