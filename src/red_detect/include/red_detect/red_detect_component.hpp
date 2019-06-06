@@ -94,31 +94,25 @@ extern "C" {
 
 #include <json_lib/json11.hpp>
 
+#include "signal_lib/dma_simple.h"
+#include <vector>
+#include <iomanip>
+#include <iterator>
+#include <cmath>
+
 using namespace std::chrono;
 using namespace std;
 using namespace cv;
 
 using std::placeholders::_1;
 
-map<int, vector<pair<int, int> > > mp[2];
-map<int, vector<pair<int, int> > > original_mp[2];
-set<int> widthkind[2];
 
-int sx_min[2] = {999, 999};
-int sy_min[2] = {999, 999};
-int ex_max[2] = {-1, -1};
-int ey_max[2] = {-1, -1};
-#define WINDOW_WIDTH 64
-#define WINDOW_HEIGHT 32
-bool imgout = false;
-float proba_thresh = 0.65;
-#define hwmode true
-#define checkmode false
-#define showdetailtime false
-#define FEATURE_SIZE 672
-
-unsigned short sw_feature[FEATURE_SIZE*4] = {0};
-unsigned short hw_feature[FEATURE_SIZE*4] = {0};
+struct window_rect{
+    int sy;
+    int sx;
+    int ey;
+    int ex;
+};
 
 
 namespace red_detect
@@ -128,25 +122,49 @@ namespace red_detect
         REDDETECT_PUBLIC RedDetect();
 
     private:
-        int window_mode;
-        int how_search; // -1で探さない 0で外周 1で交差点
+        int how_search;
         bool find_flag;
-        int find_count;
+
+        void *dma_regs;
+        void *hls_regs;
+        struct udmabuf intake_buf;
+        struct udmabuf outlet_buf;
+
+        float THRESH;
+        float BIAS;
+        bool LOG_MODE;
+
+        struct window_rect{
+            int sy;
+            int sx;
+            int ey;
+            int ex;
+        };
+
+        std::chrono::system_clock::time_point  t1, t2;
+
+
+        window_rect shukai_waku, cross_waku;
+
+        unsigned int *assignToPhysicalUInt(unsigned long address,unsigned int size);
+        int hw_setup();
+
+        void writebram(unsigned int* target, string array_name, json11::Json json, unsigned int fixed_val = 0, bool zeroflag=false);
+
+        int json_setup();
+
+        cv::Mat getShrinkFrame(cv::Mat original_img, int window_height);
+
+        vector<pair<pair<int,int>,int>> predictRectFrame(cv::Mat inputimg, int window_height, window_rect waku, int sy = 0, int sx = 0);
+
+        vector<pair<pair<int,int>,int>> processRectFrame(cv::Mat original_img, int window_height, window_rect waku, int sy = 0, int sx = 0);
+
+        void image_cb(const sensor_msgs::msg::Image::SharedPtr msg);
+        void signalSearchCb(const std_msgs::msg::String::SharedPtr msg);
 
         rclcpp::Publisher<std_msgs::msg::String>::SharedPtr red_pub_;
         rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr image_sub_ ;
         rclcpp::Subscription<std_msgs::msg::String>::SharedPtr signal_search_;
-
-        void check_window();
-        void check_window2(std::string project_folder);
-        void signalSearchCb(const std_msgs::msg::String::SharedPtr msg);
-        void image_cb(const sensor_msgs::msg::Image::SharedPtr msg);
-        bool hwresultcheck(unsigned short* sw_feature, unsigned short* hw_feature, int start, int end);
-        void test_four_window(float* result, int num, Mat rgb[4], Mat hls[4], Mat gray[4], double* time0, double* time1, double* time2, double *time3);
-        vector<pair<vector<int>, float>> test_one_frame(Mat frame, int mode);
-        int encoding2mat_type(const std::string & encoding);
-
-
     };
 } // namespace red_detect
 

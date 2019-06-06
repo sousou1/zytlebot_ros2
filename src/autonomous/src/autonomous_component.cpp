@@ -1858,13 +1858,12 @@ namespace autonomous {
             cv::Mat template_rot;
             cv::warpAffine(template_img, template_rot, affine, template_img.size(), cv::INTER_CUBIC);
 
+            int temp_birdseye_length = BIRDSEYE_LENGTH;
             if (isIntersection) {
-                cv::Mat searchRoi(aroundWhiteBinary, cv::Rect(searchLeftX, 0, BIRDSEYE_LENGTH * 1.5, BIRDSEYE_LENGTH * 0.5));
-            } else {
-                cv::Mat searchRoi(aroundWhiteBinary, cv::Rect(searchLeftX, 0, BIRDSEYE_LENGTH * 1.5, BIRDSEYE_LENGTH));
+                temp_birdseye_length = temp_birdseye_length * 0.5;
             }
 
-            cv::Mat searchRoi(aroundWhiteBinary, cv::Rect(searchLeftX, 0, BIRDSEYE_LENGTH * 1.5, BIRDSEYE_LENGTH));
+            cv::Mat searchRoi(aroundWhiteBinary, cv::Rect(searchLeftX, 0, BIRDSEYE_LENGTH * 1.5, temp_birdseye_length));
 
             cv::matchTemplate(searchRoi, template_rot, result, cv::TM_CCORR_NORMED);
             cv::Point maxPt;
