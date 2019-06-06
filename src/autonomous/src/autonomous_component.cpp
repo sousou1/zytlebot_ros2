@@ -422,7 +422,7 @@ namespace autonomous {
         template_under_T = cv::imread(PROJECT_DIR + "/image/under_T.png", 1);
         template_crosswalk = cv::imread(PROJECT_DIR + "/image/crosswalk.png", 1);
         template_right_curve = cv::imread(PROJECT_DIR + "/image/right_curve.png", 1);
-        template_intersection = cv::imread(PROJECT_DIR + "/image/intersection.png", 1);
+        template_intersection = cv::imread(PROJECT_DIR + "/image/crosswalk.png", 1);
 
         BLOCK_SIZE = autorace["block_size"].int_value();
         OFFSET = autorace["offset"].int_value();
