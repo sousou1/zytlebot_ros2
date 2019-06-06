@@ -177,7 +177,7 @@ namespace autonomous {
         // 左レーンの発見フラグをリセット
         find_left_line = false;
 
-        system("clear");
+        if (std_out) system("clear");
         if (std_out) cout << "現在のフェーズ : " << now_phase << std::endl;
         std::string direction;
         switch (now_dir) {
@@ -1102,7 +1102,7 @@ namespace autonomous {
         twist.linear.x = LEFT_CURVE_VEL;
         twist.angular.z = LEFT_CURVE_ROT + (BIRDSEYE_LENGTH * (1 + RUN_LINE) - temp_detect_line) / 100;
 
-        system("clear");
+        if (std_out) system("clear");
         if (std_out) cout << "default : " << LEFT_CURVE_VEL << endl;
         if (std_out) cout << "this : " << (BIRDSEYE_LENGTH * (1 + RUN_LINE) - temp_detect_line) / 100 << endl;
 

@@ -6,7 +6,7 @@ if(NOT CMAKE_CXX_STANDARD)
     set(CMAKE_CXX_STANDARD 14)
 endif()
 
-set(CMAKE_CXX_FLAGS "-lm -g -fsigned-char -fpermissive -Wint-to-pointer-cast -O3")
+set(CMAKE_CXX_FLAGS "-lm -g -fsigned-char -fpermissive -Wint-to-pointer-cast -O3  -Wno-pointer-arith")
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     # add_compile_options(-lm -g -fsigned-char -fpermissive -Wint-to-pointer-cast -O3)
@@ -56,7 +56,7 @@ include_directories(
 
 # Build a standalone version of the node
 
-add_executable(red_detect src/red_detect.cpp include/json_lib/json11.cpp include/signal_lib/dma_simple.c)
+add_executable(red_detect src/red_detect.cpp include/json_lib/json11.cpp)
 target_link_libraries(red_detect red_detect_component)
 
 ament_target_dependencies(red_detect

@@ -3,38 +3,42 @@
 #include <class_loader/register_macro.hpp>
 #include <chrono>
 #include <memory>
-#include <utilty>
 
 using namespace std;
 using namespace cv;
+
+#include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/mman.h>
+
 
 namespace red_detect {
 
     RedDetect::RedDetect()
             : Node("red_detect") {
-        int mode = atoi(argv[1]);
+        cout << "start reddetect" << endl;
 
         if(json_setup() < 0){
             cout << "json setup failed" << endl;
-            return -1;
         }
         if(hw_setup() < 0){
             cout << "hw_setup() failed" << endl;
-            return -1;
         }
         cout << "hw_setup() finished" << endl;
 
-        cv::VideoCapture cap(0);
+        cap.open(0);
         if(!cap.isOpened()){
             cout << "failed" << endl;
-            return -1;
         }
-
-        image_sub_ = this->create_subscription<sensor_msgs::msg::Image>(
-                "/webcam/image_raw", std::bind(&RedDetect::image_cb, this, _1));
-
         signal_search_ = this->create_subscription<std_msgs::msg::String>(
                 "/signal_search_type", std::bind(&RedDetect::signalSearchCb, this, _1));
+
+        timer_ = create_wall_timer(100ms, std::bind(&RedDetect::image_cb, this));
 
         red_pub_ = create_publisher<std_msgs::msg::String>("/red_flag", 1);
 
@@ -64,8 +68,7 @@ namespace red_detect {
         find_count = 0;
          */
     }
-f
-    unsigned int RedDetect::*assignToPhysicalUInt(unsigned long address,unsigned int size){
+    unsigned int* RedDetect::assignToPhysicalUInt(unsigned long address,unsigned int size){
         int devmem = open("/dev/mem", O_RDWR | O_SYNC);
         off_t PageOffset = (off_t) address % getpagesize();
         off_t PageAddress = (off_t) (address - PageOffset);
@@ -105,22 +108,15 @@ f
         }
     }
 
-    void RedDetect::image_cb(const sensor_msgs::msg::Image::SharedPtr msg) {
-
+    void RedDetect::image_cb() {
         cout << "search signal Type = " << how_search << "!!!!!!" << endl;
 
-        auto send_msg = std::make_shared<std_msgs::msg::String>();
-        send_msg->data = "false";
+
         if (how_search != -1) {
             cout << "searching signal!!!!" << endl;
-            //cv::Mat baseImage(480, 640, CV_8UC2);
-            cv::Mat dstimg(480, 640, CV_8UC2);
-            cv::Mat frame(
-                    msg->height, msg->width, encoding2mat_type(msg->encoding),
-                    const_cast<unsigned char *>(msg->data.data()), msg->step);
-            if (msg->encoding == "rgb8") {
-                cv::cvtColor(frame, dstimg, cv::COLOR_RGB2BGR);
-            }
+
+            cv::Mat frame;
+            cap >> frame; // get a new frame from camera
 
             window_rect waku;
             // 0なら周回
@@ -128,17 +124,28 @@ f
             if(how_search == 0) waku = shukai_waku;
             else waku = cross_waku;
 
-            auto candidates = processRectFrame(dstimg, 32, waku, 240, 160);
-            auto candidates2 = processRectFrame(dstimg, 80, waku);
+            auto candidates = processRectFrame(frame, 32, waku, 240, 160);
+            auto candidates2 = processRectFrame(frame, 80, waku);
             //auto candidates3 = processRectFrame(frame, 70, waku);
-            auto candidates4 = processRectFrame(dstimg, 60, waku);
-            auto candidates5 = processRectFrame(dstimg, 50, waku);
+            auto candidates4 = processRectFrame(frame, 60, waku);
+            auto candidates5 = processRectFrame(frame, 50, waku);
+
+            auto find = std::make_shared<std_msgs::msg::String>();
+
             find_flag = (candidates.size() > 0 || candidates2.size() > 0 || candidates4.size() > 0 || candidates5.size() > 0);
+
+            if (find_flag) {
+                find->data = "true";
+            } else {
+                find->data = "false";
+            }
 
             t2 = std::chrono::system_clock::now();
             double elapsed = (double)std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count();
             if(LOG_MODE) cout << "elapsed:" << elapsed << "[milisec]" << endl;
             if(LOG_MODE) cout << "fps:" << 1000.0/elapsed << "[fps]" << endl;
+
+            red_pub_->publish(find);
         }
     }
 
@@ -212,6 +219,57 @@ f
         return scaled_frame;
     }
 
+    int RedDetect::encoding2mat_type(const std::string & encoding)
+    {
+        if (encoding == "mono8") {
+            return CV_8UC1;
+        } else if (encoding == "bgr8") {
+            return CV_8UC3;
+        } else if (encoding == "mono16") {
+            return CV_16SC1;
+        } else if (encoding == "rgba8") {
+            return CV_8UC4;
+        } else if (encoding == "bgra8") {
+            return CV_8UC4;
+        } else if (encoding == "32FC1") {
+            return CV_32FC1;
+        } else if (encoding == "rgb8") {
+            return CV_8UC3;
+        } else {
+            throw std::runtime_error("Unsupported encoding type");
+        }
+    }
+
+    void RedDetect::convert_frame_to_message(
+            const cv::Mat & frame, size_t frame_id, sensor_msgs::msg::Image::SharedPtr msg)
+    {
+        // copy cv information into ros message
+        msg->height = frame.rows;
+        msg->width = frame.cols;
+        msg->encoding = mat_type2encoding(frame.type());
+        msg->step = static_cast<sensor_msgs::msg::Image::_step_type>(frame.step);
+        size_t size = frame.step * frame.rows;
+        msg->data.resize(size);
+        memcpy(&msg->data[0], frame.data, size);
+        msg->header.frame_id = std::to_string(frame_id);
+    }
+
+    std::string RedDetect::mat_type2encoding(int mat_type)
+    {
+        switch (mat_type) {
+            case CV_8UC1:
+                return "mono8";
+            case CV_8UC3:
+                return "bgr8";
+            case CV_16SC1:
+                return "mono16";
+            case CV_8UC4:
+                return "rgba8";
+            default:
+                throw std::runtime_error("Unsupported encoding type");
+        }
+    }
+
     //input: 320x240pix
     //output: ((sy,sx), window_height)
     vector<pair<pair<int,int>,int>> RedDetect::predictRectFrame(cv::Mat inputimg, int window_height, window_rect waku, int sy = 0, int sx = 0){
@@ -268,6 +326,8 @@ f
     return predictRectFrame(shrinked_img, window_height, waku);
     }
     }
+
+
 
 } // namespace autorace
 
