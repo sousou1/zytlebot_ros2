@@ -251,9 +251,9 @@ namespace autonomous {
         // 以下デバッグ出力
 
         auto pub_img = std::make_shared<sensor_msgs::msg::Image>();
-        convert_frame_to_message(aroundImg, 1, pub_img);
+        if (std_out) convert_frame_to_message(aroundImg, 1, pub_img);
 
-        test_pub_->publish(pub_img);
+        if (std_out) test_pub_->publish(pub_img);
 
         /*
         if(DEBUG) {

@@ -96,7 +96,7 @@ namespace webcam {
 
     void Webcam::set_Init() {
         CbFlag = false;
-        fd = open("/dev/video1", O_RDWR, 0);
+        fd = open("/dev/video0", O_RDWR, 0);
         if (fd == -1)
         {
             std::cout << "Failed to open video device." << std::endl;
