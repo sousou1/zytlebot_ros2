@@ -140,7 +140,8 @@ namespace autonomous {
 
         cv::Mat aroundImg, aroundWhiteBinary;
         aroundImg = birdsEyeAround(caliblated);
-        aroundWhiteBinary = whiteBinary(aroundImg);
+        //aroundWhiteBinary = whiteBinary(aroundImg);
+        cv::adaptiveThreshold(aroundImg, aroundWhiteBinary, 255, ADAPTOVE_THRESH_MEAN_C, THRESH_BINARY, BLOCK_SIZE, OFFSET);
 
         if (DEBUG) aroundDebug = aroundWhiteBinary.clone();
 
@@ -250,7 +251,7 @@ namespace autonomous {
         // 以下デバッグ出力
 
         auto pub_img = std::make_shared<sensor_msgs::msg::Image>();
-        convert_frame_to_message(aroundWhiteBinary, 1, pub_img);
+        convert_frame_to_message(aroundImg, 1, pub_img);
 
         test_pub_->publish(pub_img);
 
@@ -414,6 +415,8 @@ namespace autonomous {
         template_right_curve = cv::imread(PROJECT_DIR + "/image/right_curve.png", 1);
         template_intersection = cv::imread(PROJECT_DIR + "/image/intersection.png", 1);
 
+        BLOCK_SIZE = autorace["block_size"].int_value();
+        OFFSET = autorace["offset"].int_value();
 
         find_left_line = false;
 

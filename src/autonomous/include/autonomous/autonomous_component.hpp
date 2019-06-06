@@ -143,7 +143,7 @@ namespace autonomous
                 CROSSWALK_UNDER_MARGIN, RIGHT_CURVE_UNDER_MARGIN, INTERSECTION_PREDICTION_UNDER_MARGIN, INTERSECTION_CURVE_START_FLAG_RATIO, RUN_LINE, RUN_LINE_MARGIN, WIDTH_RATIO, HEIGHT_H, HEIGHT_L, INTERSECTION_STRAIGHT_TIME;
 
 
-        int Hue_l, Hue_h, Saturation_l, Saturation_h, Lightness_l, Lightness_h;
+        int Hue_l, Hue_h, Saturation_l, Saturation_h, Lightness_l, Lightness_h, BLOCK_SIZE, OFFSET;
 
         cv::Mat camera_mtx;
         cv::Mat camera_dist;

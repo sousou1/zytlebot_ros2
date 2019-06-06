@@ -52,7 +52,7 @@ namespace webcam {
                     return;
                 }
 
-                cv::Mat frame(h, w, CV_8UC3);
+                cv::Mat frame(640, 320, CV_8UC3);
                 auto msg = std::make_shared<sensor_msgs::msg::Image>();
 
                 memcpy(frame.data, buffers[buf.index], 640 * 480 * 2);
@@ -96,7 +96,7 @@ namespace webcam {
 
     void Webcam::set_Init() {
         CbFlag = false;
-        fd = open("/dev/video0", O_RDWR, 0);
+        fd = open("/dev/video1", O_RDWR, 0);
         if (fd == -1)
         {
             std::cout << "Failed to open video device." << std::endl;
