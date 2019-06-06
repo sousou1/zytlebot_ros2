@@ -140,8 +140,17 @@ namespace autonomous {
 
         cv::Mat aroundImg, aroundWhiteBinary;
         aroundImg = birdsEyeAround(caliblated);
-        //aroundWhiteBinary = whiteBinary(aroundImg);
-        cv::adaptiveThreshold(aroundImg, aroundWhiteBinary, 255, ADAPTOVE_THRESH_MEAN_C, THRESH_BINARY, BLOCK_SIZE, OFFSET);
+        aroundWhiteBinary = whiteBinary(aroundImg);
+
+        cv::Mat gray;
+        cvtColor(aroundImg, gray, COLOR_RGB2GRAY);
+
+        cv::adaptiveThreshold(gray, aroundWhiteBinary, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, BLOCK_SIZE, OFFSET);
+
+        cv::cvtColor(aroundWhiteBinary, aroundWhiteBinary, COLOR_GRAY2RGB);
+
+
+        //cv::adaptiveThreshold(aroundImg, aroundWhiteBinary, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, BLOCK_SIZE, OFFSET);
 
         if (DEBUG) aroundDebug = aroundWhiteBinary.clone();
 
