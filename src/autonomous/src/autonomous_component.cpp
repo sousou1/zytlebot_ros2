@@ -235,7 +235,8 @@ namespace autonomous {
             } else if (now_phase == "find_obs") {
                 obstacleAvoidance(road_white_binary, aroundWhiteBinary);
             } else if (now_phase == "intersection_straight") {
-                double degree_average = intersectionStraight(road_clone);
+                // double degree_average = intersectionStraight(road_clone);
+                double degree_average = 0.0;
                 twist.linear.x = 0.1;
                 detected_angle = degree_average;
                 intersectionDetectionByTemplateMatching(aroundWhiteBinary, degree_average);
