@@ -381,6 +381,7 @@ namespace autonomous {
         CROSSWALK_UNDER_MARGIN = autorace["crosswalk_under_margin"].number_value();
         RIGHT_CURVE_UNDER_MARGIN = autorace["right_curve_under_margin"].number_value();
         INTERSECTION_PREDICTION_UNDER_MARGIN = autorace["intersection_prediction_under_margin"].number_value();
+        INTERSECTION_CROSSWALK_UNDER_MARGIN = autorace["intersection_crosswalk_under_margin"].number_value();
         RUN_LINE = autorace["run_line"].number_value();
         RUN_LINE_MARGIN = autorace["run_line_margin"].number_value();
         WIDTH_RATIO = autorace["width_ratio"].number_value();
@@ -1858,7 +1859,7 @@ namespace autonomous {
             cv::warpAffine(template_img, template_rot, affine, template_img.size(), cv::INTER_CUBIC);
 
             if (isIntersection) {
-                cv::Mat searchRoi(aroundWhiteBinary, cv::Rect(searchLeftX, 0, BIRDSEYE_LENGTH * 1.5, BIRDSEYE_LENGTH * 50));
+                cv::Mat searchRoi(aroundWhiteBinary, cv::Rect(searchLeftX, 0, BIRDSEYE_LENGTH * 1.5, BIRDSEYE_LENGTH * 0.5));
             } else {
                 cv::Mat searchRoi(aroundWhiteBinary, cv::Rect(searchLeftX, 0, BIRDSEYE_LENGTH * 1.5, BIRDSEYE_LENGTH));
             }
@@ -1949,10 +1950,14 @@ namespace autonomous {
                 if (obj.beforeY > BIRDSEYE_LENGTH -  RIGHT_CURVE_UNDER_MARGIN) {
                     rightcurveFlag = true;
                 }
+            } else if(obj.objType == "intersection") {
+                if (obj.beforeY > BIRDSEYE_LENGTH -  INTERSECTION_CROSSWALK_UNDER_MARGIN) {
+                    intersectionDetectionFlag = true;
+                }
             }
             else if (obj.beforeY > BIRDSEYE_LENGTH  -  INTERSECTION_PREDICTION_UNDER_MARGIN)  {
                 if (obj.findCnt > 1) {
-                    if (obj.objType == "right_T" || obj.objType == "left_T" || obj.objType == "under_T" || obj.objType == "intersection") {
+                    if (obj.objType == "right_T" || obj.objType == "left_T" || obj.objType == "under_T") {
                         intersectionDetectionFlag = true;
                     }
                 }
