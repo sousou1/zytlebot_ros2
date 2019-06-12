@@ -27,7 +27,7 @@
     "run_line_margin": 0.1,
     "intersection_prediction_time_ratio": 50,
     "intersection_prediction_under_margin": -5,
-    "intersection_crosswalk_under_margin": 60,
+    "intersection_crosswalk_under_margin": 50,
     "crosswalk_under_margin": 0,
     "right_curve_under_margin": 0,
     "intersection_curve_start_flag_ratio": 0.6,

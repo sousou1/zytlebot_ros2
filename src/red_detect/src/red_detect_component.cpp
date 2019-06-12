@@ -23,6 +23,9 @@ namespace red_detect {
             : Node("red_detect") {
         cout << "start reddetect" << endl;
 
+        find_flag = false;
+        find_count = 0;
+
         if(json_setup() < 0){
             cout << "json setup failed" << endl;
         }
@@ -132,13 +135,36 @@ namespace red_detect {
 
             auto find = std::make_shared<std_msgs::msg::String>();
 
-            find_flag = (candidates.size() > 0 || candidates2.size() > 0 || candidates4.size() > 0 || candidates5.size() > 0);
+            bool now_find = (candidates.size() > 0 || candidates2.size() > 0 || candidates4.size() > 0 || candidates5.size() > 0);
+
+
+            if (now_find) { // 見つかった場合
+                if (find_count >= 0) { // find_countが0以上の場合
+                    find_count++;
+                } else {
+                    find_count = 1; // find_countが負の値の場合
+                }
+            } else { //　見つからなかった場合
+                if (find_count <= 0) {
+                    find_count--; // find_countが負の場合、-1
+                } else {
+                    find_count = -1; // find_countが正の値の場合
+                }
+            }
+
+            // 3回連続で見つけたり見失ったらフラグを変更
+            if (find_count >= 3) {
+                find_flag = true;
+            } else if (find_count <= -3) {
+                find_flag = false;
+            }
 
             if (find_flag) {
                 find->data = "true";
             } else {
                 find->data = "false";
             }
+
 
             t2 = std::chrono::system_clock::now();
             double elapsed = (double)std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count();

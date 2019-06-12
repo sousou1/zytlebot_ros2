@@ -237,6 +237,7 @@ namespace red_detect
     private:
         int how_search;
         bool find_flag;
+        int find_count;
 
         void *dma_regs;
         void *hls_regs;
