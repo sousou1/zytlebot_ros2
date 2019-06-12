@@ -112,11 +112,11 @@ namespace red_detect {
     }
 
     void RedDetect::image_cb() {
-        cout << "search signal Type = " << how_search << "!!!!!!" << endl;
+        if(LOG_MODE) cout << "search signal Type = " << how_search << "!!!!!!" << endl;
 
 
         if (how_search != -1) {
-            cout << "searching signal!!!!" << endl;
+            if(LOG_MODE) cout << "searching signal!!!!" << endl;
 
             cv::Mat frame;
             cap >> frame; // get a new frame from camera
@@ -178,7 +178,7 @@ namespace red_detect {
     void RedDetect::writebram(unsigned int* target, string array_name, json11::Json json, unsigned int fixed_val = 0, bool zeroflag=false){
         int cnt = 0;
         for(auto &k: json[array_name].array_items()){
-            cout << cnt << " ";
+            if(LOG_MODE) cout << cnt << " ";
             if(fixed_val == 0 && zeroflag == false) target[cnt++] = k.number_value();
             else target[cnt++] = fixed_val;
         }
