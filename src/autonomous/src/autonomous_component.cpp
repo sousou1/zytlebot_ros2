@@ -24,7 +24,7 @@
 // 向きは1がデータ画像のとおりで、0~3で右回りに表現されている
 int map_data[3][1][2] = {{{1, 3}},
                          {{6, 1}},
-                         {{2, 1}}};
+                         {{1, 1}}};
 
 int intersectionDir[100] = {0};
 
@@ -212,9 +212,7 @@ namespace autonomous {
                     // intersectionDetectionByTemplateMatching(aroundWhiteBinary, degree_average);
                     searchObject();
                     lineTrace(degree_average, road_white_binary);
-                    if (map_data[next_tile_y][next_tile_x][0] == 1) {
-                        crosswalkRedStop();
-                    }
+                    crosswalkRedStop();
                     limitedTwistPub();
                 }
             } else if (now_phase == "trace_right_curve") {
@@ -460,6 +458,8 @@ namespace autonomous {
 
         turnFlag = false;
 
+        do_signal_search = "0";
+
         searchType == "";
 
         acceleration = false;
@@ -611,6 +611,11 @@ namespace autonomous {
         double now = get_time_sec();
 
         if (now - line_lost_time > RIGHT_CURVE_START_LOST_LINE_TIME) {
+            if (do_signal_search == "0") {
+                do_signal_search = "-1";
+            } else {
+                do_signal_search = "0";
+            }
             changePhase("u_turn");
         }
     }
@@ -787,7 +792,7 @@ namespace autonomous {
         int differenceDirection = (tileRot - now_dir + 4) % 4;
 
         auto how_signal_search = std::make_shared<std_msgs::msg::String>();
-        how_signal_search->data = "0";
+        how_signal_search->data = do_signal_search;
 
         signal_search_->publish(how_signal_search);
     }

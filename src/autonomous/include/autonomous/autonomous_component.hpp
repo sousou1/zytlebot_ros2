@@ -288,6 +288,8 @@ namespace autonomous
 
         bool std_out = true;
 
+        std::string do_signal_search;
+
         //////////
 
 
