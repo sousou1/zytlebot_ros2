@@ -210,6 +210,9 @@ namespace autonomous
         // 人形を見つけているかどうか
         bool findFigureFlag;
 
+        bool turnFlag;
+
+
 
         // カーブの次が横断歩道の場合、カーブ終了後横断歩道を認識するまで少しストップ
         bool curveAfterCrosswalk;
@@ -334,6 +337,8 @@ namespace autonomous
         void crosswalkRedStop();
 
         double intersectionStraight(cv::Mat roadRoi);
+
+        void uTurn();
 
         void leftTurn();
 

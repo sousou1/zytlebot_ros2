@@ -22,13 +22,9 @@
 // map_data[y][x][0]がタイルの種類
 // map_data[y][x][1]が向きを表している
 // 向きは1がデータ画像のとおりで、0~3で右回りに表現されている
-int map_data[7][5][2] = {{{3, 0}, {4, 0}, {7, 2}, {4, 0}, {3, 1}},
-                         {{6, 1}, {0, 0}, {1, 1}, {0, 0}, {6, 1}},
-                         {{4, 1}, {0, 0}, {5, 1}, {0, 0}, {4, 1}},
-                         {{7, 1}, {2, 0}, {8, 0}, {2, 2}, {7, 3}},
-                         {{4, 1}, {0, 0}, {5, 3}, {0, 0}, {4, 1}},
-                         {{6, 1}, {0, 0}, {1, 3}, {0, 0}, {6, 1}},
-                         {{3, 3}, {4, 0}, {7, 0}, {4, 0}, {3, 2}}};
+int map_data[3][1][2] = {{{1, 3}},
+                         {{6, 1}},
+                         {{1, 1}}};
 
 int intersectionDir[100] = {0};
 
@@ -211,11 +207,12 @@ namespace autonomous {
                     double degree_average = detectLane(left_roi);
                     detected_angle = degree_average;
                     // レーン検出してdetected_lineを更新、平均角度を求める
-                    searchRedObs(birds_eye);
+                    // searchRedObs(birds_eye);
                     // if (now_phase == "straight" && FIGURE_SEARCH)searchFigure(birds_eye);
-                    intersectionDetectionByTemplateMatching(aroundWhiteBinary, degree_average);
+                    // intersectionDetectionByTemplateMatching(aroundWhiteBinary, degree_average);
                     searchObject();
                     lineTrace(degree_average, road_white_binary);
+                    crosswalkRedStop();
                     limitedTwistPub();
                 }
             } else if (now_phase == "trace_right_curve") {
@@ -244,6 +241,8 @@ namespace autonomous {
                 limitedTwistPub();
             } else if (now_phase == "crosswalk") {
                 crosswalkRedStop();
+            } else if (now_phase == "u_turn") {
+                uTurn();
             }
         } else {
             // searchFigure(birds_eye);
@@ -457,6 +456,8 @@ namespace autonomous {
         rightcurveFlag = false;
         findFigureFlag = false;
 
+        turnFlag = false;
+
         searchType == "";
 
         acceleration = false;
@@ -531,6 +532,8 @@ namespace autonomous {
         reachBottomLeftLaneStraightEnd = false;
         crosswalkFlag = false;
         rightcurveFlag = false;
+        turnFlag = false;
+
         line_lost_time = get_time_sec();
 
         figure_search_phase_limit = false;
@@ -555,8 +558,7 @@ namespace autonomous {
         // 垂直に近い点のみ線を引く
         for (size_t i = 0; i < left_lines.size(); i++) {
             STRAIGHT left_line = toStraightStruct(left_lines[i]);
-            if (left_line.degree < 30 && left_line.degree > -30) {
-
+            if (left_line.degree < 20 && left_line.degree > -20) {
                 if (DEBUG) {
                     cv::line(aroundDebug, cv::Point(left_lines[i][0] + BIRDSEYE_LENGTH / 2, left_lines[i][1]),
                              cv::Point(left_lines[i][2] + BIRDSEYE_LENGTH / 2, left_lines[i][3]), cv::Scalar(0, 0, 255),
@@ -606,111 +608,8 @@ namespace autonomous {
     void Autonomous::searchObject() {
         double now = get_time_sec();
 
-        // タイルの種類 1~8がそれぞれFPTのroad meshに対応
-        int tileType = map_data[next_tile_y][next_tile_x][0];
-
-        // タイルの回転 1が画像通りで0~3で表している
-        int tileRot = map_data[next_tile_y][next_tile_x][1];
-
-        // タイルと入射角の差　どの方角からタイルに侵入するかを判別
-        int differenceDirection = (tileRot - now_dir + 4) % 4;
-        // 交差点で次にどの方角へ向かうかが決められているので、それと現在の方角の差をとるために使う
-        int nextDirection = (intersectionDir[nowIntersectionCount] - now_dir + 4) % 4;
-
-        if (tileType == 3 && differenceDirection== 2) {
-            // nextTileを検索
-            // カーブを右に曲がるならfind_curveを探索
-            if (rightcurveFlag) {
-                curveAfterCrosswalk = true;
-                now_dir = (now_dir + 1) % 4;
-                changePhase("turn_right");
-                setNextTile();
-            }
-        } else if (tileType == 3 && differenceDirection == 3) {
-            // 左カーブ
-            if (now - line_lost_time > LEFT_CURVE_START_LOST_LINE_TIME) {
-                now_dir = (now_dir + 3) % 4;
-                changePhase("turn_left");
-                setNextTile();
-            }
-        } else if (tileType == 2 || tileType == 5 || tileType == 6) {
-            // 横断歩道
-            if (crosswalkFlag) {
-                if (std_out) cout << "横断歩道発見" << std::endl;
-                changePhase("crosswalk");
-            }
-        } else if (intersectionDetectionFlag) {
-            if (tileType == 7) { // T字路
-                if (differenceDirection == 3) {
-                    // T字路に左から入る
-                    if (nextDirection == 0) { // 直進
-                        nowIntersectionCount++;
-                        changePhase("straight");
-                        setNextTile();
-
-                    } else { // 右に曲がる
-                        curveAfterCrosswalk = true;
-                        nowIntersectionCount++;
-                        now_dir = (now_dir + 1) % 4;
-                        changePhase("turn_right");
-                        setNextTile();
-
-                    }
-                } else if (differenceDirection == 0) {
-                    // T字路の下から突き当りに向かって入った場合
-                    if (nextDirection == 1) { // 右に曲がる
-                        curveAfterCrosswalk = true;
-                        nowIntersectionCount++;
-                        now_dir = (now_dir + 1) % 4;
-                        changePhase("turn_right");
-                        setNextTile();
-
-                    } else { // 左に曲がる
-                        nowIntersectionCount++;
-                        now_dir = (now_dir + 3) % 4;
-                        changePhase("turn_left");
-                        setNextTile();
-
-                    }
-                } else { // T字路に右から入った場合
-                    if (nextDirection == 0) { // 直進 左車線が消えるため、特殊な動作をさせる
-                        nowIntersectionCount++;
-                        changePhase("intersection_straight");
-                        setNextTile();
-
-                    }
-                    if (nextDirection == 3) { // 左に曲がる
-                        nowIntersectionCount++;
-                        now_dir = (now_dir + 3) % 4;
-                        changePhase("turn_left");
-                        setNextTile();
-
-                    }
-
-                }
-
-            } else if (tileType == 8) {
-                // 十字路
-                if (nextDirection == 1) {
-                    intersectionAfterCrosswalk = true;
-                    nowIntersectionCount++;
-                    if (std_out) cout << "十字路を右に曲がる" << std::endl;
-                    now_dir = (now_dir + 1) % 4;
-                    changePhase("turn_right");
-                    setNextTile();
-                } else if (nextDirection == 3) {
-                    intersectionAfterCrosswalk = true;
-                    nowIntersectionCount++;
-                    now_dir = (now_dir + 3) % 4;
-                    changePhase("turn_left");
-                    setNextTile();
-                } else {
-                    intersectionAfterCrosswalk = true;
-                    nowIntersectionCount++;
-                    changePhase("intersection_straight");
-                    setNextTile();
-                }
-            }
+        if (now - line_lost_time > ros::Duration(RIGHT_CURVE_START_LOST_LINE_TIME)) {
+            changePhase("u_turn");
         }
     }
 
@@ -855,10 +754,8 @@ namespace autonomous {
 
             int nextTile = map_data[next_y][next_x][0];
             // road1,4(ただの直線)でないかチェック
-            if (nextTile == 2 || nextTile == 5 || nextTile == 6) {
-                if (!intersectionAfterCrosswalk) { // intersectionの直後の交差点は無視する
-                    break;
-                }
+            if (nextTile == 1 || nextTile == 2 || nextTile == 5 || nextTile == 6) {
+                break;
             } else if (nextTile == 3 || nextTile == 7 || nextTile == 8) {
                 break;
             }
@@ -888,34 +785,7 @@ namespace autonomous {
         int differenceDirection = (tileRot - now_dir + 4) % 4;
 
         auto how_signal_search = std::make_shared<std_msgs::msg::String>();
-        how_signal_search->data = "-1";
-
-        if (tileType == 6) {
-            // 外周横断歩道
-            searchType = "crosswalk";
-            how_signal_search->data = "0";
-        } else if (tileType == 2 || tileType == 5) {
-            // 交差点横断歩道
-            searchType = "crosswalk";
-            how_signal_search->data = "1";
-        } else if (tileType == 7) { // T字路
-            if(differenceDirection == 3) {
-                // T字路に左から入る
-                searchType = "right_T";
-            } else if(differenceDirection == 0) {
-                // T字路の下から突き当りに向かって入った場合
-                searchType = "under_T";
-            } else {
-                // T字路に右から入った場合
-                searchType = "left_T";
-            }
-        } else if (tileType == 8) {
-            searchType = "intersection";
-        } else if (tileType == 3) {
-            searchType = "right_curve";
-        } else {
-            searchType = "";
-        }
+        how_signal_search->data = "0";
 
         signal_search_->publish(how_signal_search);
     }
@@ -931,17 +801,40 @@ namespace autonomous {
             limitedTwistPub();
             if (now - phaseStartTime > 20.0) {
                 changePhase("straight");
-                twist.linear.x = 1.0;
-                setNextTile();
+                twist.linear.x = 0.8;
             }
-        } else {
-            changePhase("straight");
-            twist.linear.x = 1.0;
-            setNextTile();
         }
     }
 
-// 直線
+    // 決め打ちで右回りにuターン
+    void  Autonomous::uTurn() {
+        ros::Time now = ros::Time::now();
+        //　右車線に向けて回転
+        if (now - phaseStartTime <  ros::Duration(AVOID_ROT_TIME)) {
+            twist.linear.x = AVOID_OBSTACLE_VEL;
+            twist.angular.z = AVOID_OBSTACLE_ROT;
+            Right_LED = true; // LED
+        } else if(now - phaseStartTime <  ros::Duration(AVOID_ROT_TIME + AVOID_ROT_STRAIGHT))
+        { // 右車線に向けて直進
+            twist.linear.x = AVOID_OBSTACLE_VEL;
+            twist.angular.z = 0;
+        } else if(now - phaseStartTime <  ros::Duration(AVOID_ROT_TIME * 2 + AVOID_ROT_STRAIGHT - AVOID_STRAIGHT_TIME))
+        { // 右車線に対して水平になるように回転
+            twist.linear.x = AVOID_OBSTACLE_VEL;
+            twist.angular.z = AVOID_OBSTACLE_ROT;
+            Right_LED = false; // LED
+        } else if(now - phaseStartTime <  ros::Duration(AVOID_ROT_TIME * 2 + AVOID_ROT_STRAIGHT - AVOID_STRAIGHT_TIME + AVOID_BEFORE_STRAIGHT_MARGIN_TIME))
+        { // 直進向く寸前に反動を消す
+            twist.linear.x = AVOID_OBSTACLE_VEL;
+            twist.angular.z = AVOID_OBSTACLE_ROT / 5 * -1;
+        } else {
+            changePhase("search_line");
+        }
+        limitedTwistPub();
+    }
+
+
+    // 直線
 // 傾きからまっすぐ走らせる
     double Autonomous::intersectionStraight(cv::Mat roadRoi) {
         double now = get_time_sec();
@@ -1354,7 +1247,7 @@ namespace autonomous {
             } else {
                 twist.linear.x += 0.02;
             }
-            if (degree_average < -10 || degree_average > 10) {
+            if (degree_average < -3 || degree_average > 3) {
                 // 角度平均が-5以上なら左に曲がる、5以上なら右に曲がる
                 twist.angular.z = degree_average * -0.01;
             }
