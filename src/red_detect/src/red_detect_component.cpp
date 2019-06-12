@@ -127,7 +127,7 @@ namespace red_detect {
             if(how_search == 0) waku = shukai_waku;
             else waku = cross_waku;
 
-            auto candidates = processRectFrame(frame, 32, waku, 240, 160);
+            // auto candidates = processRectFrame(frame, 32, waku, 240, 160);
             auto candidates2 = processRectFrame(frame, 80, waku);
             //auto candidates3 = processRectFrame(frame, 70, waku);
             auto candidates4 = processRectFrame(frame, 60, waku);
@@ -135,7 +135,7 @@ namespace red_detect {
 
             auto find = std::make_shared<std_msgs::msg::String>();
 
-            bool now_find = (candidates.size() > 0 || candidates2.size() > 0 || candidates4.size() > 0 || candidates5.size() > 0);
+            bool now_find = (candidates2.size() > 0 || candidates4.size() > 0 || candidates5.size() > 0);
 
 
             if (now_find) { // 見つかった場合
