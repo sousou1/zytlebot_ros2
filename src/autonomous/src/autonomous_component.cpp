@@ -196,7 +196,7 @@ namespace autonomous {
         // ---------------controller----------------
         updateObject();
 
-
+        setSearchType();
 
         if (!findFigureFlag) {
             if (now_phase == "straight") {
@@ -781,15 +781,6 @@ namespace autonomous {
 
 // 次に探すべき模様を決定する
     void Autonomous::setSearchType() {
-        // searchTypeの更新
-        // タイルの種類 1~8がそれぞれFPTのroad meshに対応
-        int tileType = map_data[next_tile_y][next_tile_x][0];
-
-        // タイルの回転 1が画像通りで0~3で表している
-        int tileRot = map_data[next_tile_y][next_tile_x][1];
-
-        // タイルと入射角の差　どの方角からタイルに侵入するかを判別
-        int differenceDirection = (tileRot - now_dir + 4) % 4;
 
         auto how_signal_search = std::make_shared<std_msgs::msg::String>();
         how_signal_search->data = do_signal_search;
