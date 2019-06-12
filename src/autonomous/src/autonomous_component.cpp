@@ -24,7 +24,7 @@
 // 向きは1がデータ画像のとおりで、0~3で右回りに表現されている
 int map_data[3][1][2] = {{{1, 3}},
                          {{6, 1}},
-                         {{1, 1}}};
+                         {{2, 1}}};
 
 int intersectionDir[100] = {0};
 
@@ -212,7 +212,9 @@ namespace autonomous {
                     // intersectionDetectionByTemplateMatching(aroundWhiteBinary, degree_average);
                     searchObject();
                     lineTrace(degree_average, road_white_binary);
-                    crosswalkRedStop();
+                    if (map_data[next_tile_y][next_tile_x][0] == 1) {
+                        crosswalkRedStop();
+                    }
                     limitedTwistPub();
                 }
             } else if (now_phase == "trace_right_curve") {
