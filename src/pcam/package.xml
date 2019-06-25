@@ -4,7 +4,7 @@
     <name>pcam</name>
     <version>1.0.0</version>
     <description>ZytleBot pcam for ROS2</description>
-    <maintainer email="git@example.com">So Tamura</maintainer>
+    <maintainer email="tamusou@gmail.com">So Tamura</maintainer>
     <license>Apache License 2.0</license>
 
     <buildtool_depend>ament_cmake</buildtool_depend>
