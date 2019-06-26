@@ -68,9 +68,9 @@ Ultra96ではなく、**Raspberry Pi 3**で行ってください。
 ```
 git clone https://github.com/sousou1/zytlebot_ros2.git
 cd zytlebot_ros2
-colcon build
+colcon build --parallel-workers 1
 ```
-
+parallel-workersオプションがない場合、メモリが足らずに失敗することがあります。
 ## 実行方法
 Ultra96とsshしたターミナルを2つ立ち上げてください
 ### ターミナル1(OpenCRとの接続)
