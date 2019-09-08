@@ -94,6 +94,9 @@ extern "C" {
 #include <iterator>
 #include <cmath>
 
+//RF
+#include <randam_forest/forest.h>
+#include <randam_forest/rf_feature.h>
 
 #define DMA_INTAKE_DMACR  (0x0000)
 #define DMA_INTAKE_DMASR  (0x0004)
@@ -288,6 +291,9 @@ namespace red_detect
                 const cv::Mat & frame, size_t frame_id, sensor_msgs::msg::Image::SharedPtr msg);
 
         rclcpp::TimerBase::SharedPtr timer_;
+
+        float rf_test_one_image(Mat img);
+        void putRectangle(vector<pair<pair<int,int>,int> > window_candidates, Mat frame_image);
 
     };
 } // namespace red_detect

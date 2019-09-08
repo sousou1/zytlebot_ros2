@@ -71,6 +71,32 @@ namespace red_detect {
         find_count = 0;
          */
     }
+
+    float RedDetect::rf_test_one_image(Mat img){
+        Mat resized_img, gray;
+        cv::resize(img, resized_img, cv::Size(64 ,32), INTER_NEAREST);
+        cv::Mat resized_hls;
+        cv::cvtColor(resized_img, resized_hls, CV_BGR2HSV);
+        ​
+        cv::Size spatial_size(8, 8);
+        Mat spatial_rgb, spatial_hls;
+        cv::resize(resized_img, spatial_rgb, spatial_size, INTER_LINEAR);
+        cv::resize(resized_hls, spatial_hls, spatial_size, INTER_LINEAR);
+
+        unsigned short feature[672] = {0};
+        rf_ravel(spatial_hls, feature);
+        rf_ravel(spatial_rgb, feature + 192);
+        // hist(resized_hls, feature + 192 * 2);
+        // hist(resized_img, feature + 192 * 2 + 36);
+        ​
+        cv::cvtColor(resized_img, gray, CV_BGR2GRAY);
+        rf_lite_hog(gray, feature + 192 * 2);
+        ​
+        float proba = randomforest_classifier(feature);
+        // float red_proba = (float)res.red / (res.not_red + res.red);
+        return proba;
+    }
+
     unsigned int* RedDetect::assignToPhysicalUInt(unsigned long address,unsigned int size){
         int devmem = open("/dev/mem", O_RDWR | O_SYNC);
         off_t PageOffset = (off_t) address % getpagesize();
@@ -101,6 +127,15 @@ namespace red_detect {
         return 1;
     }
 
+    void RedDetect::putRectangle(vector<pair<pair<int,int>,int> > window_candidates, Mat frame_image){
+        for(int i = 0; i < window_candidates.size(); i++){
+            int sy = window_candidates[i].first.first;
+            int sx = window_candidates[i].first.second;
+            int window_height = window_candidates[i].second;
+            rectangle(frame_image, Point(sx, sy), Point(sx + window_height*2, sy + window_height), Scalar(0,0,200), 2); //x,y //Scaler = B,G,R
+        }
+    }
+
     void RedDetect::signalSearchCb(const std_msgs::msg::String::SharedPtr msg) {
         if (msg->data == "-1") {
             how_search = -1;
@@ -120,7 +155,7 @@ namespace red_detect {
 
             cv::Mat frame;
             cap >> frame; // get a new frame from camera
-
+            //cv::Mat res = frame.clone();
             window_rect waku;
             // 0なら周回
             // それ以外　交差点
@@ -133,6 +168,13 @@ namespace red_detect {
             auto candidates4 = processRectFrame(frame, 60, waku);
             auto candidates5 = processRectFrame(frame, 50, waku);
 
+            /*putRectangle(candidates, res);
+             * putRectangle(candidates2, res);
+                putRectangle(candidates4, res);
+                putRectangle(candidates5, res);
+                cv::imshow("result", res);
+                cv::waitKey(1);
+                */
             auto find = std::make_shared<std_msgs::msg::String>();
 
             bool now_find = (candidates2.size() > 0 || candidates4.size() > 0 || candidates5.size() > 0);
@@ -314,27 +356,35 @@ namespace red_detect {
     dma_wait_irq(dma_regs);
     dma_clear_status(dma_regs);
 
-    for(int y = 0; y < 27; y++){
-    for(int x = 0; x < 33; x++){
-    int index = y * 33 + x;
-    float hwrst = ((float*) (outlet_buf.buf))[index];
-    hwrst += 1.7700042; //must be done
-    hwrst += BIAS;
-    // float proba = 1.0/(1.0+exp(-rst));
-    if(hwrst > THRESH){
-    int detected_y = (int)((float)y * 8 * window_height / 32.0) + sy;
-    int detected_x = (int)((float)x * 8 * window_height / 32.0) + sx;
-    //inside window rect
-    if(waku.sy <= detected_y && waku.sx <= detected_x && detected_y + window_height <= waku.ey && detected_x + window_height*2 <= waku.ex){
-    float proba = 1.0/(1.0+exp(-hwrst));
-    if(LOG_MODE) cout << window_height << " " << proba << " " << detected_y << " " << detected_x << endl;
-    rst.push_back(make_pair(make_pair(detected_y, detected_x), window_height));
-    }
-    }
-    }
-    }
-    return rst;
-    }
+int removecnt = 0;
+for(int y = 0; y < 27; y++){
+for(int x = 0; x < 33; x++){
+int index = y * 33 + x;
+float hwrst = ((float*) (outlet_buf.buf))[index];
+hwrst += 1.7700042; //must be done
+hwrst += BIAS;
+// float proba = 1.0/(1.0+exp(-rst));
+if(hwrst > THRESH){
+Mat window_bgr_img = inputimg(cv::Rect(x*8, y*8, 64, 32));
+float rf_proba = rf_test_one_image(window_bgr_img);
+// cout << "rf_proba : " << rf_proba << endl;
+if(rf_proba < 0.50){
+removecnt++;
+continue;
+}
+//inside window rect
+int detected_y = (int)((float)y * 8 * window_height / 32.0) + sy;
+int detected_x = (int)((float)x * 8 * window_height / 32.0) + sx;
+if(waku.sy <= detected_y && waku.sx <= detected_x && detected_y + window_height <= waku.ey && detected_x + window_height*2 <= waku.ex){
+float proba = 1.0/(1.0+exp(-hwrst));
+if(LOG_MODE) cout << window_height << " " << proba << " " << detected_y << " " << detected_x << endl;
+rst.push_back(make_pair(make_pair(detected_y, detected_x), window_height));
+}
+}
+}
+}
+cout << "removecnt :" << removecnt << endl;
+return rst;
 
     vector<pair<pair<int,int>,int>> RedDetect::processRectFrame(cv::Mat original_img, int window_height, window_rect waku, int sy = 0, int sx = 0){
     if(window_height <= 32){
