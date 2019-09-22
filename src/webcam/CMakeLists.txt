@@ -20,6 +20,7 @@ find_package(ament_cmake REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(cv_bridge REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(rclcpp_components REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(image_transport REQUIRED)
 find_package(OpenCV REQUIRED)
@@ -32,17 +33,19 @@ ament_target_dependencies(webcam_component
         sensor_msgs
         cv_bridge
         rclcpp
+        rclcpp_components
         class_loader
         std_msgs
         image_transport
         )
 
-rclcpp_register_node_plugins(webcam_component "webcam::webcam")
+rclcpp_components_register_nodes(webcam_component "webcam::webcam")
 
 include_directories(
         ${sensor_msgs_INCLUDE_DIRS}
         ${cv_bridge_INCLUDE_DIRS}
         ${rclcpp_INCLUDE_DIRS}
+        ${rclcpp_components_INCLUDE_DIRS}
         ${std_msgs_INCLUDE_DIRS}
         ${image_transport_INCLUDE_DIRS}
         ${OpenCV_INCLUDE_DIRS}
