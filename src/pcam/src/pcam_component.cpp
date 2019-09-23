@@ -16,7 +16,7 @@ namespace pcam {
         image_pub_ = create_publisher<sensor_msgs::msg::Image>("/pcam/image_raw", 1);
 
         // TODO 時間設定
-        timer_ = create_wall_timer(100ms, std::bind(&Pcam::get_image, this));
+        timer_ = create_wall_timer(30ms, std::bind(&Pcam::get_image, this));
     }
 
     void Pcam::get_image() {

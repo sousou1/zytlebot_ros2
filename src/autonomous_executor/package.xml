@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format2.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+    <name>autonomous_executor</name>
+    <version>1.0.0</version>
+    <description>ZytleBot Executor</description>
+    <maintainer email="bob@example.com">So Tamura</maintainer>
+    <license>Apache License 2.0</license>
+
+    <buildtool_depend>ament_cmake</buildtool_depend>
+
+    <build_depend>rclcpp</build_depend>
+    <build_depend>autonomous</build_depend>
+    <build_depend>red_detect</build_depend>
+    <build_depend>pcam</build_depend>
+
+    <exec_depend>rclcpp</exec_depend>
+    <exec_depend>autonomous</exec_depend>
+    <exec_depend>red_detect</exec_depend>
+    <exec_depend>pcam</exec_depend>
+
+    <export>
+        <build_type>ament_cmake</build_type>
+    </export>
+</package>
